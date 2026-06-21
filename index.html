@@ -3,102 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mansur Julianto | IT Solutions & Engineering</title>
+    <title>xyz-sur | Portfolio</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
+            --bg: #0a0f1d;
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --text: #e2e8f0;
             --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.2);
         }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; }
-        
-        .container { max-width: 1000px; margin: 0 auto; padding: 2rem; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6;
+            scroll-behavior: smooth;
+        }
 
-        /* Terminal Style Header */
-        header { padding: 4rem 0; text-align: center; }
-        .terminal-text { font-family: 'Courier New', monospace; color: var(--accent); }
-        h1 { font-size: 3rem; margin-bottom: 0.5rem; }
-        
+        /* Layout */
+        .container { max-width: 1000px; margin: 0 auto; padding: 0 20px; }
+
+        /* Header */
+        header { 
+            height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center;
+            text-align: center;
+        }
+        .terminal-text { font-family: 'Fira Code', monospace; color: var(--accent); margin-bottom: 10px; }
+        h1 { font-size: 3.5rem; margin-bottom: 10px; }
+        .typewriter { font-family: 'Fira Code', monospace; color: var(--accent); font-size: 1.2rem; min-height: 1.6em; }
+
         /* Sections */
-        section { margin-bottom: 4rem; }
-        h2 { font-size: 1.5rem; margin-bottom: 1.5rem; border-left: 4px solid var(--accent); padding-left: 1rem; color: var(--accent); }
+        section { padding: 80px 0; }
+        h2 { font-size: 2rem; margin-bottom: 40px; text-align: center; color: var(--accent); }
 
-        /* Cards Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
-        .card { background: var(--card-bg); padding: 1.5rem; border-radius: 12px; transition: transform 0.3s ease; border: 1px solid #334155; }
-        .card:hover { transform: translateY(-10px); border-color: var(--accent); }
-        
+        /* Grid Cards */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { 
+            background: var(--card-bg); 
+            padding: 25px; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            transition: 0.3s;
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 10px 30px var(--accent-glow); }
+        .card h3 { margin-bottom: 15px; color: #fff; }
+
         /* Skills */
-        .skill-list { display: flex; flex-wrap: wrap; gap: 10px; }
-        .badge { background: #334155; padding: 0.5rem 1rem; border-radius: 20px; font-size: 0.85rem; }
+        .skill-cloud { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+        .badge { background: #1e293b; padding: 8px 16px; border-radius: 20px; font-size: 0.9rem; border: 1px solid var(--accent); }
 
         /* Footer */
-        footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.9rem; }
+        footer { text-align: center; padding: 40px; font-size: 0.9rem; color: #64748b; }
 
-        @media (max-width: 600px) { h1 { font-size: 2rem; } }
+        /* Responsive */
+        @media (max-width: 768px) { h1 { font-size: 2.5rem; } }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
-        <p class="terminal-text">> root@mansur-julianto:~/portfolio</p>
-        <h1>Mansur Julianto</h1>
-        <p>IT Support Specialist | Cloud Architect | Founder of BM TECHID & PT MMSTORE</p>
+        <p class="terminal-text">> root@xyz-sur:~/portfolio</p>
+        <h1>xyz-sur</h1>
+        <div id="typewriter" class="typewriter"></div>
     </header>
 
-    <section id="about">
-        <h2>About</h2>
-        <p>Berbasis di Pekanbaru, saya mengombinasikan keahlian teknis di bidang infrastruktur server, otomasi sistem, dan manajemen jaringan dengan visi kewirausahaan. Berpengalaman dalam mengelola operasional IT skala besar serta mengembangkan solusi digital kustom untuk berbagai kebutuhan bisnis.</p>
-    </section>
+    <main class="container">
+        <!-- About Section -->
+        <section id="about">
+            <h2>About Me</h2>
+            <p style="text-align: center; max-width: 700px; margin: 0 auto;">
+                IT Specialist & Entrepreneur. Berfokus pada arsitektur server, otomasi sistem, dan solusi infrastruktur digital. 
+                Berpengalaman dalam mengelola ekosistem bisnis dari level teknis hingga manajemen operasional.
+            </p>
+        </section>
 
-    <section id="skills">
-        <h2>Tech Stack</h2>
-        <div class="skill-list">
-            <span class="badge">Proxmox / Docker</span>
-            <span class="badge">Python / Node.js</span>
-            <span class="badge">AutoHotkey v2</span>
-            <span class="badge">MikroTik / OpenWrt</span>
-            <span class="badge">Google Apps Script</span>
-            <span class="badge">Linux Systems</span>
-            <span class="badge">Cloudflare Tunnel</span>
-        </div>
-    </section>
+        <!-- Tech Stack -->
+        <section id="tech">
+            <h2>Tech Stack</h2>
+            <div class="skill-cloud">
+                <span class="badge">Proxmox / Docker</span>
+                <span class="badge">Node.js / Python</span>
+                <span class="badge">MikroTik / OpenWrt</span>
+                <span class="badge">AutoHotkey v2</span>
+                <span class="badge">Google Apps Script</span>
+                <span class="badge">Cloudflare Infrastructure</span>
+            </div>
+        </section>
 
-    <section id="projects">
-        <h2>Business & Projects</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>PT MMSTORE GLOBAL NUSANTARA</h3>
-                <p>Penyedia solusi IT formal dan layanan digital terintegrasi. Fokus pada skalabilitas dan otomasi bisnis.</p>
+        <!-- Projects -->
+        <section id="projects">
+            <h2>Business & Projects</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>PT MMSTORE GLOBAL NUSANTARA</h3>
+                    <p>Entitas bisnis untuk solusi IT profesional dan manajemen proyek skala enterprise.</p>
+                </div>
+                <div class="card">
+                    <h3>BM TECHID</h3>
+                    <p>Branding penyedia layanan digital, integrasi sistem, dan solusi otomasi pihak pertama.</p>
+                </div>
+                <div class="card">
+                    <h3>IT Infrastructure (Viera)</h3>
+                    <p>Implementasi sistem monitoring, POS, dan infrastruktur jaringan terpusat.</p>
+                </div>
             </div>
-            <div class="card">
-                <h3>BM TECHID</h3>
-                <p>Branding utama untuk layanan IT solution, manajemen server, dan integrasi sistem pihak pertama.</p>
-            </div>
-            <div class="card">
-                <h3>IT Infrastructure Management</h3>
-                <p>Pengelolaan sistem POS, CCTV, dan jaringan untuk operasional bisnis (Viera Anugerah Pertama).</p>
-            </div>
-        </div>
-    </section>
-
-    <section id="contact">
-        <h2>Contact</h2>
-        <p>Open for professional collaboration and IT consulting.</p>
-        <p style="margin-top: 10px;">
-            <a href="mailto:your-email@example.com" style="color: var(--accent);">Send Email</a> | 
-            <a href="https://github.com/xyz-sur" style="color: var(--accent);">GitHub Profile</a>
-        </p>
-    </section>
+        </section>
+    </main>
 
     <footer>
-        <p>&copy; 2026 Mansur Julianto. Built with passion & automation.</p>
+        <p>&copy; 2026 xyz-sur. Built with pure code.</p>
     </footer>
-</div>
 
+    <script>
+        // Efek Mengetik (Typewriter)
+        const textElement = document.getElementById('typewriter');
+        const roles = [
+            "IT Support Specialist",
+            "Cloud Infrastructure Architect",
+            "Business Owner",
+            "Automation Developer"
+        ];
+        let roleIndex = 0;
+        let charIndex = 0;
+
+        function type() {
+            if (charIndex < roles[roleIndex].length) {
+                textElement.textContent += roles[roleIndex].charAt(charIndex);
+                charIndex++;
+                setTimeout(type, 100);
+            } else {
+                setTimeout(erase, 2000);
+            }
+        }
+
+        function erase() {
+            if (charIndex > 0) {
+                textElement.textContent = roles[roleIndex].substring(0, charIndex - 1);
+                charIndex--;
+                setTimeout(erase, 50);
+            } else {
+                roleIndex = (roleIndex + 1) % roles.length;
+                setTimeout(type, 500);
+            }
+        }
+
+        type();
+    </script>
 </body>
 </html>
