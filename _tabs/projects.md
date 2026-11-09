@@ -1,7 +1,7 @@
 ---
-title: Proyek
-icon: fas fa-laptop-code
-order: 5
+title: Portofolio
+icon: fas fa-briefcase
+order: 1
 ---
 
 # 🚀 Portofolio Rekayasa Sistem, Layanan & Proyek GitHub

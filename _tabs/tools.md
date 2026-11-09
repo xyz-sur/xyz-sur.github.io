@@ -1,12 +1,12 @@
 ---
 title: Utilitas & Tools
 icon: fas fa-toolbox
-order: 4
+order: 2
 ---
 
-# 🧰 Web Developer & Cybersecurity Tools
+# 🧰 Web Developer, Networking & SecOps Tools
 
-Koleksi perangkat utilitas berbasis browser yang berjalan **100% secara client-side** tanpa mengirimkan data atau riwayat komputasi ke server luar (*Zero-Leak Architecture*):
+Koleksi perangkat utilitas berbasis browser yang berjalan **100% secara client-side** langsung di browser Anda tanpa mengirimkan data atau riwayat komputasi ke server luar (*Zero-Leak Architecture*):
 
 ---
 
@@ -18,17 +18,44 @@ Koleksi perangkat utilitas berbasis browser yang berjalan **100% secara client-s
 
 ---
 
-### 2. 🔐 [Crypto Hasher & Secret Key Generator](/tools/crypto-hasher/)
+### 2. ⚡ [Network Ping & HTTP Latency Tester](/tools/ping-tester/)
+* **Kategori:** *Network Diagnostic & Performance*
+* **Fungsi:** Mengukur waktu respon *round-trip time* (RTT) instan dari koneksi internet browser Anda ke gateway CDN global (Cloudflare 1.1.1.1, Google 8.8.8.8, Quad9 9.9.9.9, dan GitHub CDN).
+* **Cocok untuk:** Diagnostik kualitas koneksi ISP, cek latency jitter, dan deteksi rute peering lambat.
+* **[Buka Ping & Latency Tester &rarr;](/tools/ping-tester/)**
+
+---
+
+### 3. ⏱️ [Bandwidth & File Transfer Calculator](/tools/bandwidth-calculator/)
+* **Kategori:** *Bandwidth Capacity & QoS Planning*
+* **Fungsi:** 
+  * Menghitung estimasi durasi transfer unduh/unggah file berdasarkan kapasitas kuota bandwidth (Mbps/Gbps) dalam kondisi teoritis dan kondisi nyata (*80% real-world efficiency*).
+  * **MikroTik Simple Queue Burst Assistant:** Menghitung nilai rekomendasi *Burst Limit* (1.5x) dan *Burst Threshold* (0.75x) untuk konfigurasi QoS RouterOS.
+* **[Buka Bandwidth Calculator &rarr;](/tools/bandwidth-calculator/)**
+
+---
+
+### 4. 🏷️ [MAC Address Converter & IPv6 EUI-64 Generator](/tools/mac-formatter/)
+* **Kategori:** *Hardware Identification & IPv6 Provisioning*
+* **Fungsi:** 
+  * Konversi instan format alamat MAC ke format standar vendor: **Linux/Unix** (`aa:bb:cc:dd:ee:ff`), **Cisco** (`aabb.ccdd.eeff`), **Windows** (`aa-bb-cc-dd-ee-ff`), dan **Raw Hex**.
+  * Otomatis membuat alamat link-local IPv6 berbasis standar **EUI-64** (`fe80::...`).
+  * Deteksi bit transmisi Unicast/Multicast dan administrasi OUI hardware.
+* **[Buka MAC Address Converter &rarr;](/tools/mac-formatter/)**
+
+---
+
+### 5. 🔐 [Crypto Hasher & Secret Key Generator](/tools/crypto-hasher/)
 * **Kategori:** *Cybersecurity & Cryptography*
 * **Fungsi:** 
   * Kalkulasi instan hash SHA-256, SHA-512, SHA-1, dan Base64 encoding.
   * Generator kunci acak 32-byte hex dan password berkekuatan tinggi menggunakan *Cryptographically Secure Pseudorandom Number Generator (CSPRNG)* bawaan browser.
-* **Keamanan:** Data teks yang di-hash tidak pernah meninggalkan perangkat Anda.
+* **Keamanan:** Komputasi hash diproses lokal di memori browser pengguna, aman dari penyadapan jaringan.
 * **[Buka Crypto Hasher &rarr;](/tools/crypto-hasher/)**
 
 ---
 
-### 3. 📷 [Timemark GPS Camera Web](/tools/timemark/)
+### 6. 📷 [Timemark GPS Camera Web](/tools/timemark/)
 * **Kategori:** *Field Operations & Verification*
 * **Fungsi:** Pengambilan foto dokumentasi dengan sematan stempel waktu presisi (WIB), alamat lokasi, serta koordinat GPS otomatis untuk kebutuhan verifikasi pekerjaan lapangan.
 * **Cocok untuk:** Laporan instalasi teknis, audit perangkat jaringan, dan dokumentasi operasional GA.

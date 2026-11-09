@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Network Ping & HTTP Latency Tester | Bang Mansur Tools</title>
+  <meta name="description" content="Alat uji latensi jaringan web real-time dari browser ke berbagai target CDN dan server DNS global.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #090c12;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-tool {
+      background-color: #121824;
+      border: 1px solid #1f293d;
+      border-radius: 1rem;
+    }
+    .font-mono {
+      font-family: "Fira Code", monospace;
+    }
+    .latency-good { color: #00ff66; }
+    .latency-medium { color: #f59e0b; }
+    .latency-bad { color: #ef4444; }
+    .progress-bar-custom {
+      height: 6px;
+      border-radius: 3px;
+      background-color: #1f293d;
+      overflow: hidden;
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container" style="max-width: 860px;">
+    <!-- Navigation Back -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+      <a href="/tools/" class="btn btn-outline-secondary btn-sm rounded-pill text-light">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Utilitas
+      </a>
+      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill font-mono">
+        <i class="fas fa-satellite-dish me-1"></i> NetOps Latency Monitor
+      </span>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card card-tool p-4 shadow-lg mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 border border-info border-opacity-25">
+          <i class="fas fa-network-wired fa-2x"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-1 text-light font-mono">Network Ping & HTTP Latency Tester</h4>
+          <p class="text-muted small mb-0">Uji waktu respon round-trip (RTT) langsung dari koneksi browser Anda ke gateway CDN dan DNS dunia.</p>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mb-4">
+        <button id="btnRunAll" class="btn btn-success px-4 rounded-pill font-mono fw-bold">
+          <i class="fas fa-play me-1"></i> Jalankan Tes Semua Node
+        </button>
+        <button id="btnStop" class="btn btn-outline-danger px-3 rounded-pill font-mono" disabled>
+          <i class="fas fa-stop me-1"></i> Hentikan
+        </button>
+      </div>
+
+      <!-- Ping Targets Table -->
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0 font-mono small" style="background: transparent;">
+          <thead>
+            <tr class="border-secondary border-opacity-25 text-secondary">
+              <th>TARGET NODE</th>
+              <th>PENYEDIA</th>
+              <th>STATUS</th>
+              <th>RTT (MS)</th>
+              <th>AKSI</th>
+            </tr>
+          </thead>
+          <tbody id="pingTableBody">
+            <!-- Dynamic rows will be inserted here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tips Card -->
+    <div class="card card-tool p-4">
+      <h6 class="fw-bold font-mono text-light mb-2"><i class="fas fa-info-circle text-info me-2"></i>Catatan Pengujian Latensi Web:</h6>
+      <p class="text-muted small mb-0 font-mono" style="line-height: 1.6;">
+        Pengujian ini menggunakan metode HTTP/HTTPS timing probe (Fetch / Cache-busting Request) langsung dari browser Anda. Latensi di bawah <strong>50ms</strong> sangat optimal untuk gaming dan VoIP; <strong>50-100ms</strong> normal untuk browsing dan cloud apps; di atas <strong>150ms</strong> menandakan adanya jitter, bottleneck routing ISP, atau jarak geografis server yang jauh.
+      </p>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted small mt-4 pt-2 font-mono">
+      &copy; 2026 Bang Mansur &bull; Rekayasa Jaringan & Keamanan Siber
+    </footer>
+  </div>
+
+  <script>
+    const targets = [
+      { name: "Cloudflare Edge", provider: "1.1.1.1 (Cloudflare)", url: "https://1.1.1.1/cdn-cgi/trace" },
+      { name: "Google Public DNS", provider: "8.8.8.8 (Google)", url: "https://dns.google/resolve?name=example.com" },
+      { name: "Quad9 DNS", provider: "9.9.9.9 (Quad9)", url: "https://dns.quad9.net/dns-query?name=example.com" },
+      { name: "GitHub Pages CDN", provider: "Fastly / GitHub", url: "https://github.githubassets.com/favicons/favicon.png" },
+      { name: "Wikimedia Global CDN", provider: "Wikimedia Foundation", url: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Transp-square.png" }
+    ];
+
+    const tbody = document.getElementById("pingTableBody");
+    let isRunning = false;
+
+    function renderTable() {
+      tbody.innerHTML = targets.map((t, idx) => `
+        <tr id="row-${idx}" class="border-secondary border-opacity-25">
+          <td><strong class="text-light">${t.name}</strong></td>
+          <td class="text-muted">${t.provider}</td>
+          <td><span id="status-${idx}" class="badge bg-secondary">Siap</span></td>
+          <td id="rtt-${idx}" class="fw-bold text-secondary">--</td>
+          <td>
+            <button class="btn btn-outline-info btn-sm rounded-pill" onclick="testSingle(${idx})">
+              <i class="fas fa-sync-alt"></i> Test
+            </button>
+          </td>
+        </tr>
+      `).join("");
+    }
+
+    async function pingUrl(url) {
+      const cacheBust = url.includes("?") ? `&_t=${Date.now()}` : `?_t=${Date.now()}`;
+      const fullUrl = url + cacheBust;
+      const start = performance.now();
+      try {
+        await fetch(fullUrl, { method: "HEAD", mode: "no-cors", cache: "no-store" });
+        const end = performance.now();
+        return Math.round(end - start);
+      } catch (e) {
+        const end = performance.now();
+        return Math.round(end - start);
+      }
+    }
+
+    async function testSingle(idx) {
+      const statusEl = document.getElementById(`status-${idx}`);
+      const rttEl = document.getElementById(`rtt-${idx}`);
+
+      statusEl.className = "badge bg-warning text-dark";
+      statusEl.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing';
+      rttEl.innerText = "...";
+
+      // Warmup ping
+      await pingUrl(targets[idx].url);
+
+      // Real ping
+      const rtt = await pingUrl(targets[idx].url);
+      
+      let badgeClass = "badge bg-success";
+      let textClass = "latency-good";
+      if (rtt > 150) {
+        badgeClass = "badge bg-danger";
+        textClass = "latency-bad";
+      } else if (rtt > 80) {
+        badgeClass = "badge bg-warning text-dark";
+        textClass = "latency-medium";
+      }
+
+      statusEl.className = badgeClass;
+      statusEl.innerText = "Sukses";
+      rttEl.className = `fw-bold ${textClass}`;
+      rttEl.innerText = `${rtt} ms`;
+    }
+
+    async function runAll() {
+      if (isRunning) return;
+      isRunning = true;
+      document.getElementById("btnRunAll").disabled = true;
+      document.getElementById("btnStop").disabled = false;
+
+      for (let i = 0; i < targets.length; i++) {
+        if (!isRunning) break;
+        await testSingle(i);
+      }
+
+      isRunning = false;
+      document.getElementById("btnRunAll").disabled = false;
+      document.getElementById("btnStop").disabled = true;
+    }
+
+    document.getElementById("btnRunAll").addEventListener("click", runAll);
+    document.getElementById("btnStop").addEventListener("click", () => {
+      isRunning = false;
+      document.getElementById("btnRunAll").disabled = false;
+      document.getElementById("btnStop").disabled = true;
+    });
+
+    renderTable();
+  </script>
+</body>
+</html>

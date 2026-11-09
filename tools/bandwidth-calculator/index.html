@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bandwidth & File Transfer Calculator | Bang Mansur Tools</title>
+  <meta name="description" content="Kalkulator estimasi waktu download/upload data dan kalkulator QoS burst bandwidth MikroTik RouterOS.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #090c12;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-tool {
+      background-color: #121824;
+      border: 1px solid #1f293d;
+      border-radius: 1rem;
+    }
+    .form-control, .form-select {
+      background-color: #090c12;
+      border: 1px solid #2d3748;
+      color: #00ff66;
+      font-family: monospace;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #090c12;
+      border-color: #00ff66;
+      color: #00ff66;
+      box-shadow: 0 0 0 0.25rem rgba(0, 255, 102, 0.25);
+    }
+    .font-mono {
+      font-family: "Fira Code", monospace;
+    }
+    .badge-speed {
+      background: rgba(0, 255, 102, 0.1);
+      color: #00ff66;
+      border: 1px solid rgba(0, 255, 102, 0.25);
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container" style="max-width: 860px;">
+    <!-- Navigation Back -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+      <a href="/tools/" class="btn btn-outline-secondary btn-sm rounded-pill text-light">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Utilitas
+      </a>
+      <span class="badge badge-speed px-3 py-2 rounded-pill font-mono">
+        <i class="fas fa-tachometer-alt me-1"></i> NetOps Bandwidth Calc
+      </span>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card card-tool p-4 shadow-lg mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 border border-success border-opacity-25">
+          <i class="fas fa-exchange-alt fa-2x"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-1 text-light font-mono">Bandwidth & File Transfer Calculator</h4>
+          <p class="text-muted small mb-0">Hitung estimasi durasi download/upload file berdasarkan kapasitas bandwidth jaringan nyata.</p>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-6">
+          <label class="form-label text-light small font-mono">Ukuran File:</label>
+          <div class="input-group">
+            <input type="number" id="fileSize" class="form-control font-mono" value="10" min="0.1" step="0.1">
+            <select id="fileUnit" class="form-select font-mono" style="max-width: 110px;">
+              <option value="MB">MB</option>
+              <option value="GB" selected>GB</option>
+              <option value="TB">TB</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label text-light small font-mono">Kecepatan Internet (Bandwidth):</label>
+          <div class="input-group">
+            <input type="number" id="speedValue" class="form-control font-mono" value="50" min="1">
+            <select id="speedUnit" class="form-select font-mono" style="max-width: 110px;">
+              <option value="Kbps">Kbps</option>
+              <option value="Mbps" selected>Mbps</option>
+              <option value="Gbps">Gbps</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick ISP Preset Badges -->
+      <div class="mb-4">
+        <span class="text-muted small font-mono me-2">Preset ISP Cepat:</span>
+        <button class="btn btn-sm btn-outline-secondary font-mono rounded-pill me-1 mb-1" onclick="setPreset(10, 'Mbps')">10 Mbps</button>
+        <button class="btn btn-sm btn-outline-secondary font-mono rounded-pill me-1 mb-1" onclick="setPreset(20, 'Mbps')">20 Mbps</button>
+        <button class="btn btn-sm btn-outline-secondary font-mono rounded-pill me-1 mb-1" onclick="setPreset(50, 'Mbps')">50 Mbps</button>
+        <button class="btn btn-sm btn-outline-secondary font-mono rounded-pill me-1 mb-1" onclick="setPreset(100, 'Mbps')">100 Mbps</button>
+        <button class="btn btn-sm btn-outline-secondary font-mono rounded-pill me-1 mb-1" onclick="setPreset(1, 'Gbps')">1 Gbps</button>
+      </div>
+
+      <!-- Result Display -->
+      <div class="p-3 rounded-3 bg-black bg-opacity-50 border border-secondary border-opacity-25 mb-4">
+        <div class="row text-center font-mono g-3">
+          <div class="col-md-4">
+            <div class="text-secondary small">ESTIMASI TEORITIS (100%)</div>
+            <div id="resIdeal" class="fs-4 fw-bold text-success mt-1">--</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-secondary small">KONDISI NYATA (~80% Efisiensi)</div>
+            <div id="resReal" class="fs-4 fw-bold text-info mt-1">--</div>
+          </div>
+          <div class="col-md-4">
+            <div class="text-secondary small">OVERHEAD TRAFFIC JARINGAN</div>
+            <div id="resOverhead" class="fs-4 fw-bold text-warning mt-1">--</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MikroTik QoS Burst Helper -->
+      <div class="border-top border-secondary border-opacity-25 pt-4">
+        <h5 class="fw-bold font-mono text-light mb-2">
+          <i class="fas fa-sliders-h text-warning me-2"></i>MikroTik QoS Simple Queue Burst Helper
+        </h5>
+        <p class="text-muted small font-mono mb-3">
+          Hitung konfigurasi Burst Limit, Burst Threshold, dan Burst Time agar klien mendapatkan kecepatan tinggi di detik awal tanpa menghabiskan bandwidth kantor.
+        </p>
+
+        <div class="row g-3 font-mono small">
+          <div class="col-md-4">
+            <label class="form-label text-secondary">Target Max-Limit:</label>
+            <input type="text" id="qosMaxLimit" class="form-control" value="10M" placeholder="e.g. 10M">
+          </div>
+          <div class="col-md-4">
+            <label class="form-label text-secondary">Rekomendasi Burst-Limit (1.5x):</label>
+            <input type="text" id="qosBurstLimit" class="form-control text-warning" readonly>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label text-secondary">Rekomendasi Burst-Threshold (0.75x):</label>
+            <input type="text" id="qosBurstThreshold" class="form-control text-info" readonly>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted small mt-4 pt-2 font-mono">
+      &copy; 2026 Bang Mansur &bull; Rekayasa Jaringan & Keamanan Siber
+    </footer>
+  </div>
+
+  <script>
+    function calculate() {
+      const fileSize = parseFloat(document.getElementById("fileSize").value) || 0;
+      const fileUnit = document.getElementById("fileUnit").value;
+      const speedValue = parseFloat(document.getElementById("speedValue").value) || 0;
+      const speedUnit = document.getElementById("speedUnit").value;
+
+      if (fileSize <= 0 || speedValue <= 0) return;
+
+      // Convert file to Megabits (Mbit)
+      let fileInMbits = 0;
+      if (fileUnit === "MB") fileInMbits = fileSize * 8;
+      else if (fileUnit === "GB") fileInMbits = fileSize * 1024 * 8;
+      else if (fileUnit === "TB") fileInMbits = fileSize * 1024 * 1024 * 8;
+
+      // Convert speed to Megabits per second (Mbps)
+      let speedInMbps = 0;
+      if (speedUnit === "Kbps") speedInMbps = speedValue / 1000;
+      else if (speedUnit === "Mbps") speedInMbps = speedValue;
+      else if (speedUnit === "Gbps") speedInMbps = speedValue * 1000;
+
+      const secondsIdeal = fileInMbits / speedInMbps;
+      const secondsReal = secondsIdeal / 0.8; // 80% practical throughput (TCP/IP header overhead)
+
+      document.getElementById("resIdeal").innerText = formatTime(secondsIdeal);
+      document.getElementById("resReal").innerText = formatTime(secondsReal);
+      document.getElementById("resOverhead").innerText = formatTime(secondsReal - secondsIdeal);
+
+      updateQos();
+    }
+
+    function formatTime(totalSeconds) {
+      if (totalSeconds < 1) return "< 1 detik";
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+
+      const parts = [];
+      if (hours > 0) parts.push(`${hours} jam`);
+      if (minutes > 0) parts.push(`${minutes} mnt`);
+      if (seconds > 0 || parts.length === 0) parts.push(`${seconds} dtk`);
+      return parts.join(" ");
+    }
+
+    function setPreset(val, unit) {
+      document.getElementById("speedValue").value = val;
+      document.getElementById("speedUnit").value = unit;
+      calculate();
+    }
+
+    function updateQos() {
+      const raw = document.getElementById("qosMaxLimit").value.trim().toUpperCase();
+      let num = parseFloat(raw);
+      let suffix = raw.replace(/[0-9.]/g, "") || "M";
+      if (!num) num = 10;
+
+      const burstLimit = Math.round(num * 1.5);
+      const burstThreshold = Math.round(num * 0.75);
+
+      document.getElementById("qosBurstLimit").value = `${burstLimit}${suffix}`;
+      document.getElementById("qosBurstThreshold").value = `${burstThreshold}${suffix}`;
+    }
+
+    document.getElementById("fileSize").addEventListener("input", calculate);
+    document.getElementById("fileUnit").addEventListener("change", calculate);
+    document.getElementById("speedValue").addEventListener("input", calculate);
+    document.getElementById("speedUnit").addEventListener("change", calculate);
+    document.getElementById("qosMaxLimit").addEventListener("input", updateQos);
+
+    calculate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAC Address Converter & IPv6 EUI-64 Generator | Bang Mansur Tools</title>
+  <meta name="description" content="Konversi format MAC address ke format Cisco, Linux, Windows, dan generate otomatis link-local IPv6 EUI-64.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #090c12;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-tool {
+      background-color: #121824;
+      border: 1px solid #1f293d;
+      border-radius: 1rem;
+    }
+    .form-control {
+      background-color: #090c12;
+      border: 1px solid #2d3748;
+      color: #00f0ff;
+      font-family: monospace;
+    }
+    .form-control:focus {
+      background-color: #090c12;
+      border-color: #00f0ff;
+      color: #00f0ff;
+      box-shadow: 0 0 0 0.25rem rgba(0, 240, 255, 0.25);
+    }
+    .font-mono {
+      font-family: "Fira Code", monospace;
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container" style="max-width: 860px;">
+    <!-- Navigation Back -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+      <a href="/tools/" class="btn btn-outline-secondary btn-sm rounded-pill text-light">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Utilitas
+      </a>
+      <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill font-mono">
+        <i class="fas fa-barcode me-1"></i> NetOps MAC Converter
+      </span>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card card-tool p-4 shadow-lg mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="p-3 bg-info bg-opacity-10 text-info rounded-3 border border-info border-opacity-25">
+          <i class="fas fa-fingerprint fa-2x"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-1 text-light font-mono">MAC Address Converter & EUI-64</h4>
+          <p class="text-muted small mb-0">Normalisasi alamat MAC hardware ke berbagai format standar vendor jaringan dan buat IPv6 Link-Local EUI-64.</p>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label text-light small font-mono">Masukkan Alamat MAC (Format Bebas):</label>
+        <div class="input-group">
+          <input type="text" id="macInput" class="form-control font-mono fs-5" value="00:1A:2B:3C:4D:5E" placeholder="Contoh: 001a2b3c4d5e atau 00:1a:2b:3c:4d:5e">
+          <button class="btn btn-outline-secondary font-mono" onclick="generateRandomMac()">
+            <i class="fas fa-random me-1"></i> Acak MAC
+          </button>
+        </div>
+        <div id="macStatus" class="form-text text-success font-mono mt-1">Status: Format MAC 48-bit Valid</div>
+      </div>
+
+      <!-- Converted Formats -->
+      <div class="table-responsive">
+        <table class="table table-dark table-hover align-middle mb-0 font-mono small" style="background: transparent;">
+          <thead>
+            <tr class="border-secondary border-opacity-25 text-secondary">
+              <th>STANDAR / VENDOR</th>
+              <th>HASIL FORMAT</th>
+              <th style="width: 80px;">SALIN</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="border-secondary border-opacity-25">
+              <td class="text-secondary">Linux / Unix (Kolon)</td>
+              <td id="fmtLinux" class="fw-bold text-success">--</td>
+              <td><button class="btn btn-sm btn-outline-secondary" onclick="copyText('fmtLinux')"><i class="fas fa-copy"></i></button></td>
+            </tr>
+            <tr class="border-secondary border-opacity-25">
+              <td class="text-secondary">Cisco Systems (Titik)</td>
+              <td id="fmtCisco" class="fw-bold text-info">--</td>
+              <td><button class="btn btn-sm btn-outline-secondary" onclick="copyText('fmtCisco')"><i class="fas fa-copy"></i></button></td>
+            </tr>
+            <tr class="border-secondary border-opacity-25">
+              <td class="text-secondary">Windows (Hyphen)</td>
+              <td id="fmtWindows" class="fw-bold text-warning">--</td>
+              <td><button class="btn btn-sm btn-outline-secondary" onclick="copyText('fmtWindows')"><i class="fas fa-copy"></i></button></td>
+            </tr>
+            <tr class="border-secondary border-opacity-25">
+              <td class="text-secondary">Raw Hex (Tanpa Pemisah)</td>
+              <td id="fmtRaw" class="fw-bold text-light">--</td>
+              <td><button class="btn btn-sm btn-outline-secondary" onclick="copyText('fmtRaw')"><i class="fas fa-copy"></i></button></td>
+            </tr>
+            <tr class="border-secondary border-opacity-25">
+              <td class="text-secondary">IPv6 EUI-64 (Link-Local)</td>
+              <td id="fmtEui64" class="fw-bold text-danger">--</td>
+              <td><button class="btn btn-sm btn-outline-secondary" onclick="copyText('fmtEui64')"><i class="fas fa-copy"></i></button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Metadata Card -->
+    <div class="card card-tool p-4">
+      <h6 class="fw-bold font-mono text-light mb-2"><i class="fas fa-microchip text-info me-2"></i>Analisis Bit Spesifikasi MAC:</h6>
+      <div class="row font-mono small text-secondary g-2">
+        <div class="col-md-6">
+          <span class="text-light">Tipe Transmisi:</span> <span id="bitCast" class="text-info fw-bold">Unicast</span>
+        </div>
+        <div class="col-md-6">
+          <span class="text-light">Administrasi Alamat:</span> <span id="bitAdmin" class="text-success fw-bold">Universally Administered (OUI)</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted small mt-4 pt-2 font-mono">
+      &copy; 2026 Bang Mansur &bull; Rekayasa Jaringan & Keamanan Siber
+    </footer>
+  </div>
+
+  <script>
+    function parseMac(raw) {
+      const clean = raw.replace(/[^0-9A-Fa-f]/g, "").toUpperCase();
+      if (clean.length !== 12) return null;
+      return clean;
+    }
+
+    function format() {
+      const input = document.getElementById("macInput").value.trim();
+      const clean = parseMac(input);
+      const statusEl = document.getElementById("macStatus");
+
+      if (!clean) {
+        statusEl.className = "form-text text-danger font-mono mt-1";
+        statusEl.innerText = "Error: Alamat MAC harus memiliki 12 digit karakter heksadesimal.";
+        return;
+      }
+
+      statusEl.className = "form-text text-success font-mono mt-1";
+      statusEl.innerText = "Status: Format MAC 48-bit Valid";
+
+      // Linux: 00:1a:2b:3c:4d:5e
+      const linux = clean.match(/.{1,2}/g).join(":").toLowerCase();
+      // Cisco: 001a.2b3c.4d5e
+      const cisco = clean.match(/.{1,4}/g).join(".").toLowerCase();
+      // Windows: 00-1A-2B-3C-4D-5E
+      const windows = clean.match(/.{1,2}/g).join("-").toUpperCase();
+      // Raw: 001A2B3C4D5E
+      const raw = clean.toUpperCase();
+
+      // IPv6 EUI-64
+      // Insert FFFE in middle: bytes 0,1,2 + FF + FE + bytes 3,4,5
+      // Invert 7th bit (universal/local bit) of byte 0
+      let b0 = parseInt(clean.substring(0, 2), 16);
+      b0 = b0 ^ 0x02; // toggle bit 7 (0-indexed from LSB, bit 1 in byte)
+      const b0Hex = b0.toString(16).padStart(2, "0");
+
+      const euiRaw = b0Hex + clean.substring(2, 6) + "fffe" + clean.substring(6, 12);
+      const euiParts = euiRaw.match(/.{1,4}/g);
+      const eui64 = `fe80::${euiParts[0]}:${euiParts[1]}:${euiParts[2]}:${euiParts[3]}`.toLowerCase();
+
+      document.getElementById("fmtLinux").innerText = linux;
+      document.getElementById("fmtCisco").innerText = cisco;
+      document.getElementById("fmtWindows").innerText = windows;
+      document.getElementById("fmtRaw").innerText = raw;
+      document.getElementById("fmtEui64").innerText = eui64;
+
+      // Bit analysis
+      const firstByte = parseInt(clean.substring(0, 2), 16);
+      const isMulticast = (firstByte & 0x01) === 1;
+      const isLocal = (firstByte & 0x02) === 2;
+
+      document.getElementById("bitCast").innerText = isMulticast ? "Multicast / Broadcast" : "Unicast";
+      document.getElementById("bitAdmin").innerText = isLocal ? "Locally Administered (Private/Random)" : "Universally Administered (Official OUI)";
+    }
+
+    function generateRandomMac() {
+      let mac = "";
+      for (let i = 0; i < 6; i++) {
+        let byte = Math.floor(Math.random() * 256);
+        if (i === 0) byte = (byte & 0xfe) | 0x02; // unicast + locally administered
+        mac += byte.toString(16).padStart(2, "0");
+      }
+      document.getElementById("macInput").value = mac;
+      format();
+    }
+
+    function copyText(elemId) {
+      const text = document.getElementById(elemId).innerText;
+      if (text && text !== "--") {
+        navigator.clipboard.writeText(text);
+      }
+    }
+
+    document.getElementById("macInput").addEventListener("input", format);
+    format();
+  </script>
+</body>
+</html>
