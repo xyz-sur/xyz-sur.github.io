@@ -4,6 +4,18 @@ icon: fas fa-toolbox
 order: 2
 ---
 
+<meta http-equiv="refresh" content="0; url=/tools/">
+<script>
+  if (window.location.pathname.includes('/tabs/tools')) {
+    window.location.replace('/tools/');
+  }
+</script>
+
+<div class="alert alert-info border border-info border-opacity-25 rounded-3 p-3 mb-4 font-mono small d-flex justify-content-between align-items-center">
+  <span><i class="fas fa-toolbox me-2"></i> Kunjungi portal utilitas interaktif bergaya <strong>Rakko Tools</strong>:</span>
+  <a href="/tools/" class="btn btn-sm btn-info rounded-pill px-3 fw-bold text-dark text-nowrap">Buka Rakko-Style Tools &rarr;</a>
+</div>
+
 # 🧰 Web Developer, Networking & SecOps Tools
 
 Koleksi perangkat utilitas berbasis browser yang berjalan **100% secara client-side** langsung di browser Anda tanpa mengirimkan data atau riwayat komputasi ke server luar (*Zero-Leak Architecture*):

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JSON Formatter, Validator & Minifier | Bang Mansur Tools</title>
+  <meta name="description" content="Alat validasi, beautifier, dan minifikasi JSON cepat dan aman 100% di browser.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #090c12;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-tool {
+      background-color: #121824;
+      border: 1px solid #1f293d;
+      border-radius: 1rem;
+    }
+    .form-control {
+      background-color: #090c12;
+      border: 1px solid #2d3748;
+      color: #00f2fe;
+      font-family: "Fira Code", monospace;
+      font-size: 13px;
+    }
+    .form-control:focus {
+      background-color: #090c12;
+      border-color: #00f2fe;
+      color: #00f2fe;
+      box-shadow: 0 0 0 0.25rem rgba(0, 242, 254, 0.25);
+    }
+    .font-mono {
+      font-family: "Fira Code", monospace;
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container" style="max-width: 960px;">
+    <!-- Navigation Back -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+      <a href="/tools/" class="btn btn-outline-secondary btn-sm rounded-pill text-light">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Utilitas
+      </a>
+      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 rounded-pill font-mono">
+        <i class="fas fa-brackets-curly me-1"></i> JSON Engine
+      </span>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card card-tool p-4 shadow-lg mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="p-3 bg-success bg-opacity-10 text-success rounded-3 border border-success border-opacity-25">
+          <i class="fas fa-code fa-2x"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-1 text-light font-mono">JSON Formatter & Validator</h4>
+          <p class="text-muted small mb-0">Format (beautify), rapikan indentasi, validasi sintaks objek JSON, atau kompresi menjadi satu baris (minify).</p>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label text-light small font-mono mb-0">Input JSON Raw:</label>
+            <button class="btn btn-sm btn-outline-secondary font-mono py-0 px-2" onclick="loadSample()">Contoh</button>
+          </div>
+          <textarea id="jsonInput" class="form-control" rows="14" placeholder='{"status": true, "message": "hello"}'></textarea>
+        </div>
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between align-items-center mb-1">
+            <label class="form-label text-light small font-mono mb-0">Hasil Output:</label>
+            <button class="btn btn-sm btn-outline-info font-mono py-0 px-2" onclick="copyJson()">Salin</button>
+          </div>
+          <textarea id="jsonOutput" class="form-control" rows="14" readonly placeholder="Output terformat akan muncul di sini..."></textarea>
+        </div>
+      </div>
+
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <button class="btn btn-primary font-mono rounded-pill px-4" onclick="formatJson(2)">
+          <i class="fas fa-indent me-1"></i> Format Indent 2
+        </button>
+        <button class="btn btn-outline-primary font-mono rounded-pill px-3" onclick="formatJson(4)">
+          <i class="fas fa-indent me-1"></i> Format Indent 4
+        </button>
+        <button class="btn btn-warning font-mono rounded-pill px-3 text-dark" onclick="minifyJson()">
+          <i class="fas fa-compress-alt me-1"></i> Minify (1 Baris)
+        </button>
+        <button class="btn btn-outline-danger font-mono rounded-pill px-3 ms-auto" onclick="clearJson()">
+          <i class="fas fa-trash me-1"></i> Bersihkan
+        </button>
+      </div>
+
+      <div id="jsonStatus" class="font-mono small p-2 rounded bg-dark border border-secondary border-opacity-25 text-secondary">
+        Status: Menunggu payload JSON...
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted small mt-4 pt-2 font-mono">
+      &copy; 2026 Bang Mansur &bull; Rekayasa Jaringan & Keamanan Siber
+    </footer>
+  </div>
+
+  <script>
+    function formatJson(indent) {
+      const input = document.getElementById("jsonInput").value.trim();
+      if (!input) {
+        setStatus("Input kosong.", "text-warning");
+        return;
+      }
+      try {
+        const parsed = JSON.parse(input);
+        document.getElementById("jsonOutput").value = JSON.stringify(parsed, null, indent);
+        setStatus("JSON Valid! Berhasil diformat dengan rapi.", "text-success");
+      } catch (e) {
+        setStatus("Syntax Error: " + e.message, "text-danger");
+      }
+    }
+
+    function minifyJson() {
+      const input = document.getElementById("jsonInput").value.trim();
+      if (!input) {
+        setStatus("Input kosong.", "text-warning");
+        return;
+      }
+      try {
+        const parsed = JSON.parse(input);
+        document.getElementById("jsonOutput").value = JSON.stringify(parsed);
+        setStatus("JSON Valid! Berhasil dikompresi menjadi 1 baris.", "text-success");
+      } catch (e) {
+        setStatus("Syntax Error: " + e.message, "text-danger");
+      }
+    }
+
+    function loadSample() {
+      const sample = {
+        meta: {
+          app: "Hermes Agent Hub",
+          author: "Bang Mansur",
+          version: "2.4.0"
+        },
+        services: [
+          { name: "Digiflazz PPOB H2H", status: "active", port: 8080 },
+          { name: "Proxmox VE Cluster", status: "running", nodes: 2 }
+        ],
+        security: {
+          ssl: true,
+          ciphers: ["ECDHE-ECDSA-AES256-GCM-SHA384", "ECDHE-RSA-AES256-GCM-SHA384"]
+        }
+      };
+      document.getElementById("jsonInput").value = JSON.stringify(sample);
+      formatJson(2);
+    }
+
+    function clearJson() {
+      document.getElementById("jsonInput").value = "";
+      document.getElementById("jsonOutput").value = "";
+      setStatus("Input telah dibersihkan.", "text-secondary");
+    }
+
+    function copyJson() {
+      const output = document.getElementById("jsonOutput").value;
+      if (output) {
+        navigator.clipboard.writeText(output);
+        setStatus("Hasil berhasil disalin ke clipboard!", "text-info");
+      }
+    }
+
+    function setStatus(msg, cls) {
+      const el = document.getElementById("jsonStatus");
+      el.className = "font-mono small p-2 rounded bg-dark border border-secondary border-opacity-25 " + cls;
+      el.innerHTML = '<i class="fas fa-info-circle me-1"></i> Status: ' + msg;
+    }
+  </script>
+</body>
+</html>

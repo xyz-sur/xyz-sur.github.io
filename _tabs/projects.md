@@ -4,6 +4,18 @@ icon: fas fa-briefcase
 order: 1
 ---
 
+<meta http-equiv="refresh" content="0; url=/portofolio/">
+<script>
+  if (window.location.pathname.includes('/tabs/projects')) {
+    window.location.replace('/portofolio/');
+  }
+</script>
+
+<div class="alert alert-info border border-info border-opacity-25 rounded-3 p-3 mb-4 font-mono small d-flex justify-content-between align-items-center">
+  <span><i class="fas fa-external-link-alt me-2"></i> Ingin melihat portofolio interaktif versi lengkap?</span>
+  <a href="/portofolio/" class="btn btn-sm btn-info rounded-pill px-3 fw-bold text-dark text-nowrap">Buka Portofolio Lengkap &rarr;</a>
+</div>
+
 # 🚀 Portofolio Rekayasa Sistem, Layanan & Proyek GitHub
 
 Koleksi lengkap seluruh infrastruktur produksi, sistem otomasi, repositori kode sumber terbuka, dan layanan korporat yang dikembangkan oleh **Bang Mansur**:

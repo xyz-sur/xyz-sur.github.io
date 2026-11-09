@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rakko-Style Web Tools & Utilitas Jaringan | Bang Mansur</title>
+  <meta name="description" content="Koleksi alat web gratis, cepat, dan aman untuk rekayasa jaringan, keamanan siber, dan developer. 100% diproses di browser tanpa kirim data ke server luar.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #07090e;
+      --bg-card: rgba(14, 18, 27, 0.85);
+      --bg-surface: #0e131d;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(0, 242, 254, 0.4);
+      --cyan: #00f2fe;
+      --cyan-dim: rgba(0, 242, 254, 0.12);
+      --cyan-glow: rgba(0, 242, 254, 0.25);
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --font-sans: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--font-sans);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ambient-bg {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at 10% 10%, rgba(0, 242, 254, 0.05) 0%, transparent 45%),
+                  radial-gradient(circle at 90% 90%, rgba(0, 114, 255, 0.05) 0%, transparent 45%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      background: rgba(7, 9, 14, 0.9);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: #fff;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      color: #000;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      font-family: var(--font-mono);
+    }
+
+    .search-hero {
+      padding: 48px 0 32px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .search-input-box {
+      position: relative;
+      max-width: 680px;
+      margin: 24px auto 0;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 16px 20px 16px 52px;
+      background: #0e131d;
+      border: 2px solid var(--border);
+      border-radius: 16px;
+      color: #fff;
+      font-size: 16px;
+      transition: all 0.25s ease;
+      font-family: var(--font-sans);
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: var(--cyan);
+      box-shadow: 0 0 25px var(--cyan-glow);
+      background: #111726;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan);
+      font-size: 18px;
+    }
+
+    /* Category Filter Pills (Rakko Style) */
+    .cat-nav {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 24px;
+    }
+
+    .cat-btn {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 9999px;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cat-btn:hover {
+      background: rgba(0, 242, 254, 0.1);
+      color: #fff;
+      border-color: rgba(0, 242, 254, 0.3);
+    }
+
+    .cat-btn.active {
+      background: var(--cyan);
+      color: #07090e;
+      border-color: var(--cyan);
+      font-weight: 700;
+      box-shadow: 0 0 16px rgba(0, 242, 254, 0.4);
+    }
+
+    /* Tool Cards Grid (Rakko Tools Design) */
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      padding: 24px 0 60px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tool-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .tool-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-hover);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5), 0 0 20px rgba(0, 242, 254, 0.1);
+      color: inherit;
+    }
+
+    .tool-card:hover::before {
+      opacity: 1;
+    }
+
+    .tool-icon-wrapper {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+    }
+
+    .tool-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .tool-desc {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      margin-bottom: 18px;
+      flex-grow: 1;
+    }
+
+    .tool-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 14px;
+      margin-top: auto;
+    }
+
+    .tool-cat-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 3px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #94a3b8;
+    }
+
+    .tool-action-link {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--cyan);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tool-card:hover .tool-action-link {
+      gap: 9px;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: var(--bg-card);
+      border-radius: 16px;
+      border: 1px dashed var(--border);
+    }
+
+    footer {
+      border-top: 1px solid var(--border);
+      background: #05070a;
+      padding: 28px 0;
+      margin-top: auto;
+      position: relative;
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-bg"></div>
+
+  <!-- Header / Navigation -->
+  <header>
+    <div class="container d-flex justify-content-between align-items-center py-3">
+      <a href="/tools/" class="brand-link">
+        <span class="brand-badge">RAKKO TOOLS STYLE</span>
+        <span class="fw-bold fs-5 font-mono">Bang Mansur Tools</span>
+      </a>
+      <div class="d-flex align-items-center gap-3">
+        <a href="/" class="btn btn-sm btn-outline-secondary rounded-pill px-3 text-light">
+          <i class="fas fa-newspaper me-1"></i> Blog &amp; Artikel
+        </a>
+        <a href="/portofolio/" class="btn btn-sm btn-outline-info rounded-pill px-3">
+          <i class="fas fa-briefcase me-1"></i> Portofolio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero & Search Section (Rakko Tools Inspiration) -->
+  <section class="search-hero">
+    <div class="container">
+      <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-3 py-2 rounded-pill font-mono mb-3">
+        <i class="fas fa-shield-alt me-1"></i> 100% Client-Side &bull; Zero-Leak Privacy Guaranteed
+      </span>
+      <h1 class="fw-bolder display-6 text-white mb-2">Koleksi Alat Web &amp; Utilitas Jaringan</h1>
+      <p class="text-muted mx-auto" style="max-width: 620px; font-size: 15px;">
+        Alat-alat praktis gratis untuk Network Engineer, SysAdmin, dan Web Developer. Diproses langsung di memori browser Anda tanpa mengirim data ke server mana pun.
+      </p>
+
+      <!-- Live Search Box -->
+      <div class="search-input-box">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" id="toolSearch" class="search-input" placeholder="Cari alat web... (contoh: subnet, ping, mac, bandwidth, hash, json, base64)" oninput="filterTools()">
+      </div>
+
+      <!-- Categories Filter Tabs (Rakko Style) -->
+      <div class="cat-nav">
+        <button class="cat-btn active" data-cat="all" onclick="selectCategory(this, 'all')">
+          <i class="fas fa-border-all"></i> Semua Alat (<span id="count-all">8</span>)
+        </button>
+        <button class="cat-btn" data-cat="network" onclick="selectCategory(this, 'network')">
+          <i class="fas fa-network-wired"></i> Jaringan &amp; IP (<span id="count-net">4</span>)
+        </button>
+        <button class="cat-btn" data-cat="security" onclick="selectCategory(this, 'security')">
+          <i class="fas fa-lock"></i> Keamanan &amp; Hash (<span id="count-sec">1</span>)
+        </button>
+        <button class="cat-btn" data-cat="web" onclick="selectCategory(this, 'web')">
+          <i class="fas fa-code"></i> Web &amp; Developer (<span id="count-web">2</span>)
+        </button>
+        <button class="cat-btn" data-cat="utility" onclick="selectCategory(this, 'utility')">
+          <i class="fas fa-camera"></i> Waktu &amp; Kamera (<span id="count-util">1</span>)
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Grid Section -->
+  <main class="container">
+    <div class="tools-grid" id="toolsGrid">
+      
+      <!-- 1. IPv4 Subnet Calculator -->
+      <a href="/tools/subnet-calculator/" class="tool-card" data-cat="network" data-keywords="subnet calculator cidr ip mask broadcast usable host mikrotik vlsm jaringan">
+        <div>
+          <div class="tool-icon-wrapper">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <div class="tool-title">
+            <span>IPv4 Subnet &amp; CIDR Calculator</span>
+          </div>
+          <p class="tool-desc">
+            Hitung otomatis alamat Network, Broadcast, Subnet Mask, Wildcard, biner, dan total rentang usable host untuk prefix /1 hingga /32.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">JARINGAN &amp; IP</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 2. Network Ping & Latency Tester -->
+      <a href="/tools/ping-tester/" class="tool-card" data-cat="network" data-keywords="ping latency tester http rtt dns speed test cloudflare google jitter connection">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(74, 222, 128, 0.12); color: #4ade80; border-color: rgba(74, 222, 128, 0.25);">
+            <i class="fas fa-bolt"></i>
+          </div>
+          <div class="tool-title">
+            <span>Ping &amp; HTTP Latency Tester</span>
+          </div>
+          <p class="tool-desc">
+            Uji latensi round-trip time (RTT) koneksi internet secara langsung dari browser ke gateway CDN Cloudflare, Google DNS, dan Quad9.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">JARINGAN &amp; DIAGNOSTIK</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 3. Bandwidth & File Transfer Calculator -->
+      <a href="/tools/bandwidth-calculator/" class="tool-card" data-cat="network" data-keywords="bandwidth calculator download time transfer speed mikrotik qos burst simple queue isp">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; border-color: rgba(251, 191, 36, 0.25);">
+            <i class="fas fa-stopwatch"></i>
+          </div>
+          <div class="tool-title">
+            <span>Bandwidth &amp; Transfer Calculator</span>
+          </div>
+          <p class="tool-desc">
+            Estimasi waktu download file besar serta asisten otomatis perancangan formula QoS MikroTik Simple Queue Burst Rate.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">BANDWIDTH &amp; QOS</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 4. MAC Address Converter & IPv6 EUI-64 -->
+      <a href="/tools/mac-formatter/" class="tool-card" data-cat="network" data-keywords="mac address converter formatter cisco linux windows eui64 ipv6 oui link local">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(168, 85, 247, 0.12); color: #c084fc; border-color: rgba(168, 85, 247, 0.25);">
+            <i class="fas fa-tag"></i>
+          </div>
+          <div class="tool-title">
+            <span>MAC Formatter &amp; IPv6 EUI-64</span>
+          </div>
+          <p class="tool-desc">
+            Konversi format alamat MAC (Linux, Cisco, Windows, Hex) dan generator otomatis alamat IPv6 Modified EUI-64 Link-Local.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">HARDWARE &amp; IPV6</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 5. Crypto Hasher & CSPRNG Keygen -->
+      <a href="/tools/crypto-hasher/" class="tool-card" data-cat="security" data-keywords="hash sha256 sha512 md5 password generator csprng secret key token security kriptografi">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(244, 63, 94, 0.12); color: #fb7185; border-color: rgba(244, 63, 94, 0.25);">
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div class="tool-title">
+            <span>Crypto Hasher &amp; Keygen</span>
+          </div>
+          <p class="tool-desc">
+            Hitung hash SHA-256, SHA-512, MD5, serta buat password berkekuatan tinggi menggunakan CSPRNG acak standar kriptografi militer.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">KEAMANAN &amp; HASH</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 6. JSON Formatter & Validator -->
+      <a href="/tools/json-formatter/" class="tool-card" data-cat="web" data-keywords="json formatter validator beautifier minify compact syntax parser web developer api">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(34, 197, 94, 0.12); color: #4ade80; border-color: rgba(34, 197, 94, 0.25);">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="tool-title">
+            <span>JSON Formatter &amp; Validator</span>
+          </div>
+          <p class="tool-desc">
+            Rapikan indentasi JSON (beautify), kompresi payload menjadi satu baris (minify), dan validasi sintaks objek API secara instan.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">WEB &amp; DEVELOPER</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 7. Base64 & URL Encoder / Decoder -->
+      <a href="/tools/base64-converter/" class="tool-card" data-cat="web" data-keywords="base64 url encode decode converter token string payload web">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(56, 189, 248, 0.12); color: #38bdf8; border-color: rgba(56, 189, 248, 0.25);">
+            <i class="fas fa-exchange-alt"></i>
+          </div>
+          <div class="tool-title">
+            <span>Base64 &amp; URL Converter</span>
+          </div>
+          <p class="tool-desc">
+            Enkripsi dan dekripsi dua arah format string Base64 UTF-8 dan URL encoding untuk kebutuhan integrasi API dan query string.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">WEB &amp; ENCODING</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+      <!-- 8. Timemark GPS Camera Web -->
+      <a href="/tools/timemark/" class="tool-card" data-cat="utility" data-keywords="timemark camera foto gps timestamp lokasi tanggal watermark laporan kerja lapangan">
+        <div>
+          <div class="tool-icon-wrapper" style="background: rgba(249, 115, 22, 0.12); color: #fb923c; border-color: rgba(249, 115, 22, 0.25);">
+            <i class="fas fa-camera"></i>
+          </div>
+          <div class="tool-title">
+            <span>Timemark GPS Camera Web</span>
+          </div>
+          <p class="tool-desc">
+            Ambil foto dokumentasi kerja dengan stempel otomatis waktu (WIB), alamat jalan, serta titik koordinat GPS presisi untuk bukti operasional.
+          </p>
+        </div>
+        <div class="tool-footer">
+          <span class="tool-cat-badge">OPERASIONAL &amp; KAMERA</span>
+          <span class="tool-action-link">Buka Alat <i class="fas fa-arrow-right"></i></span>
+        </div>
+      </a>
+
+    </div>
+
+    <!-- Empty State for search -->
+    <div id="noResults" class="no-results d-none">
+      <i class="fas fa-search fa-3x text-muted mb-3"></i>
+      <h4 class="text-white">Alat Tidak Ditemukan</h4>
+      <p class="text-muted">Tidak ada alat yang cocok dengan kata kunci pencarian Anda. Coba kata kunci lain atau pilih kategori "Semua Alat".</p>
+      <button class="btn btn-outline-info rounded-pill px-4 mt-2" onclick="resetSearch()">Lihat Semua Alat</button>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container text-center text-muted small font-mono">
+      <div>&copy; 2026 Bang Mansur &bull; PT Xecure Siber Unggul Resolusi &bull; Rekayasa Jaringan &amp; Keamanan Siber</div>
+      <div class="mt-2 text-secondary">
+        Terinspirasi dari konsep utilitas mandiri <a href="https://rakko.tools/id" target="_blank" class="text-info text-decoration-none">Rakko Tools</a> &bull; 100% Client-Side Computing
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    let currentCategory = 'all';
+
+    function selectCategory(btn, cat) {
+      document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentCategory = cat;
+      filterTools();
+    }
+
+    function filterTools() {
+      const q = document.getElementById('toolSearch').value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.tool-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const cat = card.getAttribute('data-cat');
+        const keywords = card.getAttribute('data-keywords') || '';
+        const title = card.querySelector('.tool-title').innerText.toLowerCase();
+        const desc = card.querySelector('.tool-desc').innerText.toLowerCase();
+
+        const matchCat = (currentCategory === 'all' || cat === currentCategory);
+        const matchQuery = (!q || title.includes(q) || desc.includes(q) || keywords.includes(q));
+
+        if (matchCat && matchQuery) {
+          card.style.display = 'flex';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      const noRes = document.getElementById('noResults');
+      if (visibleCount === 0) {
+        noRes.classList.remove('d-none');
+      } else {
+        noRes.classList.add('d-none');
+      }
+    }
+
+    function resetSearch() {
+      document.getElementById('toolSearch').value = '';
+      selectCategory(document.querySelector('.cat-btn[data-cat="all"]'), 'all');
+    }
+  </script>
+</body>
+</html>
