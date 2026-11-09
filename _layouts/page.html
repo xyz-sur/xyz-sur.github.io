@@ -1,0 +1,21 @@
+---
+layout: default
+---
+
+<div class="container" style="padding-top: 40px; padding-bottom: 60px;">
+  <div class="section__prompt" style="margin-bottom: 16px;">
+    <span class="section__prompt__user">mansur@xsur</span>
+    <span class="section__prompt__separator">~</span>
+    <span class="section__prompt__separator">$</span>
+    <span class="section__prompt__command">cat {{ page.url | default: 'page.md' }}</span>
+    <span class="section__prompt__cursor cursor-blink"></span>
+  </div>
+
+  <h1 class="page-title" style="font-family: var(--font-family-headings); font-size: clamp(28px, 5vw, 44px); margin-bottom: 24px; color: var(--color-text);">
+    {{ page.title }}
+  </h1>
+
+  <div class="page-content" style="font-size: 15px; line-height: 1.8; color: var(--color-text-mid);">
+    {{ content }}
+  </div>
+</div>

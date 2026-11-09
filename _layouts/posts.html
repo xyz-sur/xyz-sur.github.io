@@ -1,0 +1,202 @@
+---
+layout: default
+---
+
+<div class="container">
+  <section class="section posts-page">
+    <div class="posts-page__head">
+      <div class="section__prompt">
+        <span class="section__prompt__user">mansur@xsur</span>
+        <span class="section__prompt__separator">~</span>
+        <span class="section__prompt__separator">$</span>
+        <span class="section__prompt__command">ls -la blog/*.md</span>
+        <span class="section__prompt__cursor cursor-blink"></span>
+      </div>
+
+      <h1 class="posts-page__title">
+        Research &amp; Technical <span>Notes.</span>
+      </h1>
+
+      <p class="posts-page__description">
+        Catatan rekayasa sistem, riset keamanan siber zero-leak, manajemen QoS MikroTik, arsitektur Proxmox homelab, dan orkestrasi AI agent otonom.
+      </p>
+
+      <div class="posts-page__filters" id="postFilterTabs">
+        <button class="posts-filter__btn is-active" data-filter="all">[ x ] All</button>
+        <button class="posts-filter__btn" data-filter="jaringan">[ ] Jaringan</button>
+        <button class="posts-filter__btn" data-filter="mikrotik">[ ] MikroTik</button>
+        <button class="posts-filter__btn" data-filter="cybersecurity">[ ] Cybersecurity</button>
+        <button class="posts-filter__btn" data-filter="homelab">[ ] Homelab</button>
+        <button class="posts-filter__btn" data-filter="proxmox">[ ] Proxmox</button>
+        <button class="posts-filter__btn" data-filter="ai">[ ] AI &amp; Automation</button>
+      </div>
+    </div>
+
+    <div class="grid grid-gap-7">
+      <!-- Main Post List Column -->
+      <div class="posts-page__main col-8 col-d-12">
+        <div class="post-list" id="postListContainer">
+          {% for post in site.posts %}
+          <article class="post-list__item" data-tags="{{ post.tags | join: ',' | downcase }}">
+            <div class="post-list__content">
+              <div class="post-list__meta">
+                <time class="post-list__date" datetime="{{ post.date | date_to_xmlschema }}">
+                  {{ post.date | date: "%d %b %Y" }}
+                </time>
+                <span class="post-list__dot">&middot;</span>
+                <span class="post-list__minutes">
+                  {% assign words = post.content | number_of_words %}
+                  {% if words < 360 %}
+                    1 min read
+                  {% else %}
+                    {{ words | divided_by: 180 }} min read
+                  {% endif %}
+                </span>
+              </div>
+
+              <h2 class="post-list__title">
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              </h2>
+
+              <p class="post-list__excerpt">
+                {% if post.description %}
+                  {{ post.description }}
+                {% else %}
+                  {{ post.excerpt | strip_html | truncate: 200 }}
+                {% endif %}
+              </p>
+
+              <div class="post-list__tags">
+                {% for tag in post.tags %}
+                <span class="post-tag">{{ tag }}</span>
+                {% endfor %}
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Sidebar Column -->
+      <aside class="posts-page__sidebar col-4 col-d-12">
+        <!-- Search Widget -->
+        <div class="widget widget-search">
+          <div class="widget__header">
+            <span class="widget__title">// SEARCH POSTS</span>
+          </div>
+          <div class="widget-search__box">
+            <label class="screen-reader-text" for="postsSearchInput">Cari artikel</label>
+            <input type="text" id="postsSearchInput" class="widget-search__input" autocomplete="off" placeholder="Ketik kata kunci...">
+            <span class="widget-search__icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+          </div>
+          <ul class="search-results-list list-reset" id="postsSearchResults"></ul>
+        </div>
+
+        <!-- Featured Portfolio Embed Promo Widget -->
+        <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent); margin-bottom: 30px;">
+          <div class="widget__header" style="margin-bottom: 12px;">
+            <span class="widget__title" style="color: var(--color-accent); font-weight:700;">// PORTOFOLIO RESMI</span>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: var(--color-text-mid); margin-bottom: 16px;">
+            Jelajahi portofolio resmi <strong>Bang Mansur</strong> yang mencakup rekayasa arsitektur jaringan korporat, klaster Proxmox SRE, dan platform otomasi 24 jam.
+          </p>
+          <div style="font-family: var(--font-family-mono); font-size: 11px; color: var(--color-accent-alt); margin-bottom: 16px; background: var(--color-bg-code); padding: 8px 12px; border-radius: 6px;">
+            &gt; origin: https://xsur.my.id<br>
+            &gt; status: 200 OK [LIVE EMBED]
+          </div>
+          <a href="{{ '/portofolio/' | relative_url }}" class="button button--primary" style="display:block; text-align:center; width:100%;">
+            &gt; Buka Portofolio (xsur.my.id) ↗
+          </a>
+        </div>
+
+        <!-- Tools Hub Promo Widget -->
+        <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent); margin-bottom: 30px;">
+          <div class="widget__header" style="margin-bottom: 12px;">
+            <span class="widget__title" style="color: var(--color-accent); font-weight:700;">// NETOPS TOOLS SUITE</span>
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: var(--color-text-mid); margin-bottom: 14px;">
+            8 alat web client-side untuk diagnostik jaringan, kalkulasi subnetting, hashing, dan konversi cepat tanpa kirim data ke server:
+          </p>
+          <ul style="list-style:none; padding:0; margin:0 0 16px 0; font-size:12px; line-height:1.8;">
+            <li><a href="{{ '/tools/subnet-calculator/' | relative_url }}" style="color:var(--color-text);">&bull; IPv4 Subnetting &amp; CIDR</a></li>
+            <li><a href="{{ '/tools/ping-tester/' | relative_url }}" style="color:var(--color-text);">&bull; Latency &amp; Jitter Tester</a></li>
+            <li><a href="{{ '/tools/bandwidth-calculator/' | relative_url }}" style="color:var(--color-text);">&bull; Bandwidth Speed Calculator</a></li>
+            <li><a href="{{ '/tools/crypto-hasher/' | relative_url }}" style="color:var(--color-text);">&bull; SHA-256 / HMAC Hasher</a></li>
+          </ul>
+          <a href="{{ '/tools/' | relative_url }}" class="button button--secondary" style="display:block; text-align:center; width:100%;">
+            &gt; Akses Semua Tools (8 Alat) ↗
+          </a>
+        </div>
+
+        <!-- Recommended Posts Widget -->
+        <div class="widget widget-featured-posts">
+          <div class="widget__header">
+            <span class="widget__title">// RECOMMENDED</span>
+          </div>
+          <div class="post-mini-list">
+            {% for post in site.posts limit:3 %}
+            <div class="post-mini">
+              <div class="post-mini__content">
+                <span class="post-mini__category">{{ post.tags | first }}</span>
+                <h3 class="post-mini__title">
+                  <a href="{{ post.url | relative_url }}" class="post-mini__link">{{ post.title }}</a>
+                </h3>
+                <time class="post-mini__date" datetime="{{ post.date | date_to_xmlschema }}">
+                  {{ post.date | date: "%d %b %Y" }}
+                </time>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Author Widget -->
+        <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent);">
+          <div class="widget__header" style="margin-bottom: 12px;">
+            <span class="widget__title">// AUTHOR INFO</span>
+          </div>
+          <div style="font-family: var(--font-family-mono); font-size: 12px; color: var(--color-accent); margin-bottom: 8px;">
+            mansur@xsur:~$ cat profile.json
+          </div>
+          <p style="font-size: 13px; line-height: 1.6; color: var(--color-text-mid); margin-bottom: 14px;">
+            <strong>Bang Mansur</strong> — Praktisi Keamanan Siber, SRE Infra, dan Mahasiswa S2 Ilmu Komputer. Zero-leak homelab &amp; bot automasi.
+          </p>
+          <div style="display:flex; gap:10px;">
+            <a href="https://github.com/xyz-sur" target="_blank" class="button button--secondary" style="flex:1; text-align:center; font-size:12px;">GitHub</a>
+            <a href="https://t.me/premium2inn" target="_blank" class="button button--secondary" style="flex:1; text-align:center; font-size:12px;">Telegram</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<script>
+  // Simple tag filtering
+  document.addEventListener('DOMContentLoaded', function() {
+    const filterBtns = document.querySelectorAll('#postFilterTabs .posts-filter__btn');
+    const postItems = document.querySelectorAll('#postListContainer .post-list__item');
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        filterBtns.forEach(b => {
+          b.classList.remove('is-active');
+          b.textContent = b.textContent.replace('[ x ]', '[ ]');
+        });
+        this.classList.add('is-active');
+        this.textContent = this.textContent.replace('[ ]', '[ x ]');
+
+        const filter = this.getAttribute('data-filter');
+
+        postItems.forEach(item => {
+          const tags = item.getAttribute('data-tags') || '';
+          if (filter === 'all' || tags.includes(filter)) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+</script>

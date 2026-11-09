@@ -1,0 +1,496 @@
+---
+layout: default
+---
+
+<!-- begin hero -->
+<section class="hero" id="hero">
+  <div class="container">
+    <div class="hero__inner grid grid-gap-d-8">
+      <div class="hero__left col-6 col-d-12">
+        <div class="hero__prompt section__prompt">
+          <span class="section__prompt__user">mansur@xsur</span>
+          <span class="section__prompt__separator">~</span>
+          <span class="section__prompt__separator">$</span>
+          <span class="section__prompt__command">me -h</span>
+          <span class="section__prompt__cursor cursor-blink"></span>
+        </div>
+
+        <h1 class="hero__title glitch" style="font-size: clamp(32px, 7vw, 92px);">
+          Bang <span class="glitch" data-text="Mansur">Mansur</span>
+        </h1>
+
+        <div class="hero__description">
+          <p>
+            <strong>Cybersecurity Practitioner, Network Infrastructure Engineer</strong>, dan Mahasiswa Magister (S2) Ilmu Komputer.
+            Berfokus pada arsitektur <em>Zero-Leak</em>, rekayasa trafik QoS MikroTik, klaster Proxmox homelab, serta otomasi bot cerdas produksi.
+          </p>
+        </div>
+
+        <div class="hero__buttons">
+          <a class="button button--primary" href="{{ '/portofolio/' | relative_url }}">&gt; ls portofolio/</a>
+          <a class="button button--secondary" href="{{ '/tools/' | relative_url }}">&gt; ls tools/</a>
+          <a class="button button--secondary" href="{{ '/posts/' | relative_url }}">&gt; cat posts.txt</a>
+        </div>
+
+        <div class="hero__stats">
+          <div class="hero__stats__item">
+            <span class="hero__stats__val">8</span>
+            <span class="hero__stats__label">Tools Suite</span>
+          </div>
+          <div class="hero__stats__item">
+            <span class="hero__stats__val">16+</span>
+            <span class="hero__stats__label">Deployments</span>
+          </div>
+          <div class="hero__stats__item">
+            <span class="hero__stats__val">{{ site.posts.size }}</span>
+            <span class="hero__stats__label">Research Notes</span>
+          </div>
+          <div class="hero__stats__item">
+            <span class="hero__stats__val">2020</span>
+            <span class="hero__stats__label">Since</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero__right col-6 col-d-12">
+        <div class="terminal">
+          <div class="terminal__bar">
+            <div class="terminal__dots">
+              <div class="terminal__dot red"></div>
+              <div class="terminal__dot amber"></div>
+              <div class="terminal__dot green"></div>
+            </div>
+            <div class="terminal-title">mansur@xsur: ~ terminal</div>
+          </div>
+
+          <div class="terminal__body">
+            <div class="terminal__output" id="terminalOutput">
+              <div class="terminal__welcome">
+                <div class="terminal__output-block">
+                  <div class="t-line">
+                    <span class="t-accent">mansur@xsur</span>
+                    <span class="t-dim">~</span>
+                    <span class="t-dim">$</span>&nbsp;whoami --verbose
+                  </div>
+                  <div class="t-line">
+                    <span class="t-dim">name:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>"<span class="t-accent-alt">Bang Mansur</span>"
+                  </div>
+                  <div class="t-line">
+                    <span class="t-dim">role:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>"<span class="t-mid">Cybersecurity &amp; IT Infrastructure Specialist</span>"
+                  </div>
+                  <div class="t-line">
+                    <span class="t-dim">email:&nbsp;&nbsp;&nbsp;&nbsp;</span>"<span class="t-mid">mansyurj168@gmail.com</span>"
+                  </div>
+                  <div class="t-line">
+                    <span class="t-dim">stack:&nbsp;&nbsp;&nbsp;&nbsp;</span><span class="t-accent-alt">["MikroTik", "Linux", "Proxmox", "Python", "Cloudflare"]</span>
+                  </div>
+                  <div class="t-line">
+                    <span class="t-dim">status:&nbsp;&nbsp;&nbsp;</span>
+                    <span class="t-accent">AVAILABLE</span>&nbsp;<span class="t-status-dot" style="background: var(--color-accent); box-shadow: 0 0 5px var(--color-accent);"></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="terminal__hint">
+              Type a command and press [ENTER]&nbsp;|&nbsp;try: <kbd>help</kbd>, <kbd>about</kbd>, <kbd>projects</kbd>, <kbd>tools</kbd>, <kbd>posts</kbd>, <kbd>contact</kbd>, <kbd>skills</kbd>
+            </div>
+
+            <div class="terminal__input-row">
+              <label class="terminal__input-label" for="terminalInput">
+                <span class="terminal__prompt-user">mansur@xsur</span>
+                <span class="terminal__prompt-separator">&nbsp;~&nbsp;$&nbsp;</span>
+              </label>
+              <input class="terminal__input" id="terminalInput" type="text" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="enter command...">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end hero -->
+
+<!-- begin projects-section -->
+<div class="container">
+  <section class="section projects-section" id="projects">
+    <div class="section__header">
+      <div class="section__info">
+        <span class="section__tagline">ls projects/</span>
+        <h2 class="section__title">Selected <br> <span>Deployments.</span></h2>
+      </div>
+      <a class="section__more" href="{{ '/portofolio/' | relative_url }}">&gt; buka portofolio lengkap (xsur.my.id) ↗</a>
+    </div>
+
+    <div class="grid projects-grid">
+      <!-- Project 1 -->
+      <article class="project-card col-6 col-t-12" data-labels="mikrotik,network,qos">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/portofolio/' | relative_url }}">Enterprise MikroTik QoS &amp; Multi-WAN Failover</a>
+          </h3>
+          <p class="project-card__description">
+            Arsitektur manajemen bandwidth Queue Tree dengan pembagian traffic PCQ adaptif, firewall mangle, multi-WAN load balancing &amp; failover, serta tunnel WireGuard mesh berlatensi rendah.
+          </p>
+          <div class="project-card__labels">
+            <span class="project-label">MikroTik RouterOS</span>
+            <span class="project-label">Queue Tree / PCQ</span>
+            <span class="project-label">WireGuard</span>
+            <span class="project-label">Multi-WAN</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Project 2 -->
+      <article class="project-card col-6 col-t-12" data-labels="proxmox,sre,homelab">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/portofolio/' | relative_url }}">Proxmox Virtualization &amp; SRE Homelab</a>
+          </h3>
+          <p class="project-card__description">
+            Klaster virtualisasi Proxmox VE dengan 17 container LXC, konfigurasi dual-NIC bridge (WAN &amp; LAN isolated), Tailscale zero-trust subnet routing, serta automated encrypted backup ke cloud B2.
+          </p>
+          <div class="project-card__labels">
+            <span class="project-label">Proxmox VE</span>
+            <span class="project-label">Dual-NIC Bridge</span>
+            <span class="project-label">Tailscale Mesh</span>
+            <span class="project-label">Zero-Trust</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Project 3 -->
+      <article class="project-card col-6 col-t-12" data-labels="bot,automation,ppob">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/portofolio/' | relative_url }}">Automasi Bot Order &amp; PPOB H2H Gateway</a>
+          </h3>
+          <p class="project-card__description">
+            Sistem bot transaksi otomatis 24 jam berbasis Telegram &amp; WhatsApp (WAHA/Baileys) dengan pembayaran dynamic QRIS real-time, integrasi gateway H2H Digiflazz &amp; OtomaX, dan notifikasi instan.
+          </p>
+          <div class="project-card__labels">
+            <span class="project-label">Telegram &amp; WAHA</span>
+            <span class="project-label">Dynamic QRIS</span>
+            <span class="project-label">Node.js / Python</span>
+            <span class="project-label">H2H Gateway</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Project 4 -->
+      <article class="project-card col-6 col-t-12" data-labels="cybersecurity,hardening,vault">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/portofolio/' | relative_url }}">Zero-Leak Cybersecurity Hardening &amp; Auditing</a>
+          </h3>
+          <p class="project-card__description">
+            Protokol hardening server Linux, pencegahan kebocoran kredensial dengan brankas enkripsi terisolasi, integrasi WAF Cloudflare dengan aturan granular, dan audit kepatuhan keamanan berkala.
+          </p>
+          <div class="project-card__labels">
+            <span class="project-label">Zero-Leak Policy</span>
+            <span class="project-label">Cloudflare WAF</span>
+            <span class="project-label">Encrypted Vault</span>
+            <span class="project-label">Linux Hardening</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+<!-- end projects-section -->
+
+<!-- begin tools-section -->
+<div class="container">
+  <section class="section tools-section" id="tools" style="padding-top: 40px;">
+    <div class="section__header">
+      <div class="section__info">
+        <span class="section__tagline">ls tools/</span>
+        <h2 class="section__title">NetOps &amp; DevTools <br> <span>Client-Side Suite.</span></h2>
+      </div>
+      <a class="section__more" href="{{ '/tools/' | relative_url }}">&gt; lihat semua utilitas (8 tools) ↗</a>
+    </div>
+
+    <div class="grid projects-grid">
+      <!-- Tool 1 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/subnet-calculator/' | relative_url }}">IPv4 Subnet &amp; CIDR Calculator</a>
+          </h3>
+          <p class="project-card__description">Kalkulasi subnetting IPv4, network/broadcast IP, netmask, wildcard, usable hosts, dan tabel VLSM otomatis.</p>
+          <div class="project-card__labels">
+            <span class="project-label">NetOps</span>
+            <span class="project-label">CIDR / VLSM</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Tool 2 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/ping-tester/' | relative_url }}">HTTP &amp; Ping Latency Tester</a>
+          </h3>
+          <p class="project-card__description">Ukur latency round-trip, DNS/fetch overhead, packet loss, dan jitter ke berbagai target endpoint secara real-time.</p>
+          <div class="project-card__labels">
+            <span class="project-label">Diagnostics</span>
+            <span class="project-label">RTT / Jitter</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Tool 3 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/bandwidth-calculator/' | relative_url }}">Bandwidth &amp; Speed Calculator</a>
+          </h3>
+          <p class="project-card__description">Konversi data bits/bytes (Kbps, Mbps, Gbps) dan estimasi waktu download/upload berdasarkan ukuran file aktual.</p>
+          <div class="project-card__labels">
+            <span class="project-label">Bandwidth</span>
+            <span class="project-label">ETA Calc</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Tool 4 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/mac-formatter/' | relative_url }}">MAC Address &amp; IPv6 EUI-64</a>
+          </h3>
+          <p class="project-card__description">Normalisasi format MAC address (Cisco, Linux, Windows), lookup OUI Vendor, dan generate IPv6 Link-Local SLAAC.</p>
+          <div class="project-card__labels">
+            <span class="project-label">Networking</span>
+            <span class="project-label">EUI-64</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Tool 5 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/crypto-hasher/' | relative_url }}">Crypto Hasher &amp; CSPRNG Generator</a>
+          </h3>
+          <p class="project-card__description">Hash MD5, SHA-1, SHA-256, SHA-512, HMAC dengan key, serta generate password acak berkekuatan kriptografis tinggi.</p>
+          <div class="project-card__labels">
+            <span class="project-label">Security</span>
+            <span class="project-label">SHA / HMAC</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+
+      <!-- Tool 6 -->
+      <article class="project-card col-4 col-d-6 col-t-12">
+        <div class="project-card__content">
+          <h3 class="project-card__title">
+            <a href="{{ '/tools/json-formatter/' | relative_url }}">JSON Formatter &amp; Validator</a>
+          </h3>
+          <p class="project-card__description">Validasi sintaks JSON, penataan indentasi bersih, minifier ukuran payload, dan visualisasi diagram hierarki tree.</p>
+          <div class="project-card__labels">
+            <span class="project-label">DevTools</span>
+            <span class="project-label">Validator</span>
+          </div>
+        </div>
+        <div class="project-card__arrow">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="var(--bg-color)"><path fill="var(--bg-color)" d="m5.99 16.596l8.192-8.192H7.818v-2h9.778v9.778h-2V9.818L7.403 18.01L5.99 16.596Z"/></svg>
+        </div>
+      </article>
+    </div>
+  </section>
+</div>
+<!-- end tools-section -->
+
+<!-- begin posts-section -->
+<div class="container">
+  <section class="section posts-section" id="posts" style="padding-top: 40px;">
+    <div class="section__header">
+      <div class="section__info">
+        <span class="section__tagline">cat posts.txt | head -n 4</span>
+        <h2 class="section__title">Latest <br> <span>Research Writes.</span></h2>
+      </div>
+      <a class="section__more" href="{{ '/posts/' | relative_url }}">&gt; lihat semua artikel blog (arsip) ↗</a>
+    </div>
+
+    <div class="grid grid-gap-7">
+      {% for post in site.posts limit:4 %}
+      <div class="article col col-3 col-d-6 col-t-12">
+        <div class="article__inner">
+          <div class="article__meta">
+            <div class="article__tags">
+              {% for tag in post.tags limit:2 %}
+              <a href="{{ '/posts/' | relative_url }}?tag={{ tag | url_encode }}" class="article__tag">{{ tag }}</a>
+              {% endfor %}
+            </div>
+            <time class="article__date" datetime="{{ post.date | date_to_xmlschema }}">
+              {{ post.date | date: "%d %b %Y" }}
+            </time>
+          </div>
+
+          <div class="article__content">
+            <h2 class="article__title">
+              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+            </h2>
+
+            <p class="article__excerpt">
+              {% if post.description %}
+                {{ post.description | truncate: 120 }}
+              {% else %}
+                {{ post.excerpt | strip_html | truncate: 120 }}
+              {% endif %}
+            </p>
+
+            <div class="article__info">
+              By Bang Mansur &middot;
+              {% assign words = post.content | number_of_words %}
+              {% if words < 360 %}
+                1 min read
+              {% else %}
+                {{ words | divided_by: 180 }} min read
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+<!-- end posts-section -->
+
+<!-- begin section-about -->
+<section class="section section-about" id="about">
+  <div class="container">
+    <div class="grid grid-gap-7">
+      <div class="section-about__left col col-6 col-d-12">
+        <div class="terminal" style="margin-top:0;">
+          <div class="terminal__bar">
+            <div class="terminal__dots">
+              <div class="terminal__dot red"></div>
+              <div class="terminal__dot amber"></div>
+              <div class="terminal__dot green"></div>
+            </div>
+            <div class="terminal-title">mansur@xsur: ~ avatar.ascii</div>
+          </div>
+          <div class="terminal__body" style="font-family: var(--font-family-mono); font-size:13px; line-height:1.45; white-space:pre; overflow-x:auto; padding:20px; color:var(--color-accent);">
++------------------------------------+
+|  [&#9632;]  mansur@xsur                    |
+|  &gt;_ NetOps &amp; SRE Infrastructure    |
+|                                    |
+|       (&bull;_&bull;)      ( &bull;_&bull;)&gt;&#8976;&#9632;-&#9632;        |
+|       &lt;) )&#9581;      (&#8976;&#9632;_&#9632;)            |
+|        / \        / \              |
++-----------------++-----------------+
+                  ||
+ [ ZERO-LEAK SECURITY HARDENING ]
+ &gt;_ network &middot; homelab &middot; bot automation
+ &gt;_ mikrotik &middot; proxmox &middot; cloudflare
+          </div>
+        </div>
+      </div>
+
+      <div class="section-about__right col col-6 col-d-12">
+        <div class="section__header">
+          <div class="section__info">
+            <span class="section__tagline">whoami</span>
+            <h2 class="section__title">The person <br> <span>behind it.</span></h2>
+          </div>
+        </div>
+
+        <div class="about__description">
+          <p>
+            Saya adalah <strong>Praktisi Keamanan Siber</strong>, <strong>Senior IT Infrastructure Specialist</strong>, dan Mahasiswa Magister (S2) Ilmu Komputer.
+          </p>
+          <p>
+            Fokus keahlian saya mencakup rekayasa arsitektur jaringan korporat &amp; manajemen bandwidth MikroTik (Queue Tree &amp; PCQ), virtualisasi klaster Proxmox VE dengan isolasi dual-NIC bridge, orkestrasi AI agent otonom dengan zero-leak security standard, serta otomatisasi bot transaksi 24 jam.
+          </p>
+        </div>
+
+        <div class="skills-grid">
+          <div class="skill-cell">
+            <div class="skill-cell__header">
+              <span>MikroTik &amp; QoS Engineering</span>
+              <span>96%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" style="width: 96%"></div>
+            </div>
+          </div>
+
+          <div class="skill-cell">
+            <div class="skill-cell__header">
+              <span>Linux Server &amp; Hardening</span>
+              <span>98%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" style="width: 98%"></div>
+            </div>
+          </div>
+
+          <div class="skill-cell">
+            <div class="skill-cell__header">
+              <span>Proxmox SRE &amp; Homelab</span>
+              <span>94%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" style="width: 94%"></div>
+            </div>
+          </div>
+
+          <div class="skill-cell">
+            <div class="skill-cell__header">
+              <span>Python &amp; Bot Automation</span>
+              <span>92%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" style="width: 92%"></div>
+            </div>
+          </div>
+
+          <div class="skill-cell">
+            <div class="skill-cell__header">
+              <span>Zero-Trust &amp; Cloudflare</span>
+              <span>90%</span>
+            </div>
+            <div class="skill-bar">
+              <div class="skill-bar-fill" style="width: 90%"></div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 28px;">
+          <a class="button button--primary" href="{{ '/about/' | relative_url }}">&gt; baca profil &amp; latar belakang lengkap ↗</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- end section-about -->

@@ -2,7 +2,10 @@
 
 source "https://rubygems.org"
 
-gem "jekyll-theme-chirpy", "~> 7.6"
+gem "jekyll", "~> 4.3"
+gem "jekyll-paginate", "~> 1.1"
+gem "jekyll-sitemap", "~> 1.4"
+gem "webrick", "~> 1.8"
 
 gem "html-proofer", "~> 5.0", group: :test
 

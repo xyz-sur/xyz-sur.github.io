@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="matrix">
+  {% include head.html %}
+  <body class="theme-page">
+    {% include header.html %}
+
+    <main class="content" id="mainContent">
+      {{ content }}
+    </main>
+
+    {% include footer.html %}
+
+    <!-- Scripts -->
+    <script src="{{ '/js/scripts.js' | relative_url }}"></script>
+    <script src="{{ '/js/common.js' | relative_url }}"></script>
+  </body>
+</html>

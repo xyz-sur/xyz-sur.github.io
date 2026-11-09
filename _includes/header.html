@@ -1,0 +1,116 @@
+<header class="header">
+  <div class="header__inner">
+    <a href="{{ '/' | relative_url }}" class="header__logo">
+      <span class="header__logo-prompt">mansur@xsur:~$</span>
+      <span class="header__logo-cursor">_</span>
+    </a>
+
+    <nav class="header__nav" aria-label="Main Navigation">
+      <ul class="header__menu">
+        <li class="header__menu-item">
+          <a href="{{ '/' | relative_url }}" class="header__link {% if page.url == '/' %}is-active{% endif %}">
+            <span class="header__link-box">[{% if page.url == '/' %}x{% else %}&nbsp;{% endif %}]</span>
+            <span class="header__link-text">Home</span>
+          </a>
+        </li>
+        <li class="header__menu-item">
+          <a href="{{ '/portofolio/' | relative_url }}" class="header__link {% if page.url contains '/portofolio' %}is-active{% endif %}">
+            <span class="header__link-box">[{% if page.url contains '/portofolio' %}x{% else %}&nbsp;{% endif %}]</span>
+            <span class="header__link-text">Portofolio</span>
+          </a>
+        </li>
+        <li class="header__menu-item">
+          <a href="{{ '/posts/' | relative_url }}" class="header__link {% if page.url contains '/posts' or page.layout == 'post' %}is-active{% endif %}">
+            <span class="header__link-box">[{% if page.url contains '/posts' or page.layout == 'post' %}x{% else %}&nbsp;{% endif %}]</span>
+            <span class="header__link-text">Blog</span>
+          </a>
+        </li>
+        <li class="header__menu-item">
+          <a href="{{ '/tools/' | relative_url }}" class="header__link {% if page.url contains '/tools' %}is-active{% endif %}">
+            <span class="header__link-box">[{% if page.url contains '/tools' %}x{% else %}&nbsp;{% endif %}]</span>
+            <span class="header__link-text">Tools</span>
+          </a>
+        </li>
+        <li class="header__menu-item">
+          <a href="{{ '/about/' | relative_url }}" class="header__link {% if page.url contains '/about' %}is-active{% endif %}">
+            <span class="header__link-box">[{% if page.url contains '/about' %}x{% else %}&nbsp;{% endif %}]</span>
+            <span class="header__link-text">About</span>
+          </a>
+        </li>
+        <li class="header__menu-item">
+          <a href="{{ '/#contact' | relative_url }}" class="header__link">
+            <span class="header__link-box">[&nbsp;]</span>
+            <span class="header__link-text">Contact</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="header__themes" role="group" aria-label="Pilih Tema Warna">
+      <button class="theme-dot" data-theme="matrix" style="--dot-color: #39ff14;" title="Matrix" aria-label="Tema Matrix"></button>
+      <button class="theme-dot" data-theme="dracula" style="--dot-color: #bd93f9;" title="Dracula" aria-label="Tema Dracula"></button>
+      <button class="theme-dot" data-theme="nord" style="--dot-color: #88c0d0;" title="Nord" aria-label="Tema Nord"></button>
+      <button class="theme-dot" data-theme="gruvbox" style="--dot-color: #fabd2f;" title="Gruvbox" aria-label="Tema Gruvbox"></button>
+      <button class="theme-dot" data-theme="mono" style="--dot-color: #aaaaaa;" title="Mono" aria-label="Tema Mono"></button>
+    </div>
+
+    <button class="header__hamburger" id="hamburgerBtn" aria-label="Buka Menu" aria-expanded="false">
+      <span class="header__hamburger-bar"></span>
+      <span class="header__hamburger-bar"></span>
+      <span class="header__hamburger-bar"></span>
+    </button>
+  </div>
+</header>
+
+<!-- Mobile Navigation Drawer -->
+<div class="nav-overlay" id="navOverlay" aria-hidden="true">
+  <div class="nav-overlay__inner">
+    <div class="nav-overlay__header">
+      <span class="terminal__prompt">mansur@xsur:~$ menu</span>
+      <button class="nav-overlay__close" id="navCloseBtn" aria-label="Tutup Menu">[ESC &times;]</button>
+    </div>
+    <ul class="nav-overlay__menu">
+      <li>
+        <a href="{{ '/' | relative_url }}" class="nav-overlay__link {% if page.url == '/' %}is-active{% endif %}">
+          <span class="terminal__accent">01.</span> [x] Home (/)
+        </a>
+      </li>
+      <li>
+        <a href="{{ '/portofolio/' | relative_url }}" class="nav-overlay__link {% if page.url contains '/portofolio' %}is-active{% endif %}">
+          <span class="terminal__accent">02.</span> [ ] Portofolio (/portofolio/)
+        </a>
+      </li>
+      <li>
+        <a href="{{ '/posts/' | relative_url }}" class="nav-overlay__link {% if page.url contains '/posts' or page.layout == 'post' %}is-active{% endif %}">
+          <span class="terminal__accent">03.</span> [ ] Blog (/posts/)
+        </a>
+      </li>
+      <li>
+        <a href="{{ '/tools/' | relative_url }}" class="nav-overlay__link {% if page.url contains '/tools' %}is-active{% endif %}">
+          <span class="terminal__accent">04.</span> [ ] Tools Hub (/tools/)
+        </a>
+      </li>
+      <li>
+        <a href="{{ '/about/' | relative_url }}" class="nav-overlay__link {% if page.url contains '/about' %}is-active{% endif %}">
+          <span class="terminal__accent">05.</span> [ ] About Me (/about/)
+        </a>
+      </li>
+      <li>
+        <a href="{{ '/#contact' | relative_url }}" class="nav-overlay__link">
+          <span class="terminal__accent">06.</span> [ ] Contact (#contact)
+        </a>
+      </li>
+    </ul>
+
+    <div class="nav-overlay__footer">
+      <div class="terminal__prompt">mansur@xsur:~$ select_theme</div>
+      <div class="header__themes" style="display:flex; gap:12px; margin-top:8px;">
+        <button class="theme-dot" data-theme="matrix" style="--dot-color: #39ff14;" title="Matrix"></button>
+        <button class="theme-dot" data-theme="dracula" style="--dot-color: #bd93f9;" title="Dracula"></button>
+        <button class="theme-dot" data-theme="nord" style="--dot-color: #88c0d0;" title="Nord"></button>
+        <button class="theme-dot" data-theme="gruvbox" style="--dot-color: #fabd2f;" title="Gruvbox"></button>
+        <button class="theme-dot" data-theme="mono" style="--dot-color: #aaaaaa;" title="Mono"></button>
+      </div>
+    </div>
+  </div>
+</div>

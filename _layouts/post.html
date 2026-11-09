@@ -1,0 +1,143 @@
+---
+layout: default
+---
+
+<div class="container">
+  <div class="post-head" style="margin-top: 30px; margin-bottom: 24px;">
+    <div class="post-head__top">
+      <div class="post-tags">
+        {% for tag in page.tags %}
+        <span class="post-tag">{{ tag }}</span>
+        {% endfor %}
+      </div>
+
+      <div class="post-head__meta">
+        <time datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%d %b %Y" }}</time>
+        <span class="post-head__meta-sep">&middot;</span>
+        <span class="post-head__meta-read">
+          {% assign words = content | number_of_words %}
+          {% if words < 360 %}
+            1 min read
+          {% else %}
+            {{ words | divided_by: 180 }} min read
+          {% endif %}
+        </span>
+        <span class="post-head__meta-sep">&middot;</span>
+        <span class="post-head__meta-author">By Bang Mansur</span>
+      </div>
+    </div>
+
+    <h1 class="post-title">{{ page.title }}</h1>
+
+    {% if page.description %}
+    <p class="post-description">{{ page.description }}</p>
+    {% endif %}
+  </div>
+
+  <div class="grid grid-gap-7">
+    <!-- Main Content Column -->
+    <div class="post-page__main col-8 col-d-12">
+      <article class="post">
+        <div class="post__content">
+          {{ content }}
+        </div>
+      </article>
+
+      <!-- Share Box -->
+      <div class="share" style="margin-top: 40px; padding: 20px; border: 1px solid var(--color-border); border-radius: 8px; background: color-mix(in srgb, var(--color-bg-panel) 50%, transparent);">
+        <div class="share__title" style="font-family: var(--font-family-mono); font-size: 13px; color: var(--color-accent); margin-bottom: 12px;">
+          // BAGIKAN CATATAN INI:
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <a href="https://api.whatsapp.com/send?text={{ page.title | url_encode }}%20{{ page.url | absolute_url }}" target="_blank" class="button button--secondary" style="font-size: 12px;">
+            <i class="fa-brands fa-whatsapp"></i> WhatsApp
+          </a>
+          <a href="https://t.me/share/url?url={{ page.url | absolute_url }}&text={{ page.title | url_encode }}" target="_blank" class="button button--secondary" style="font-size: 12px;">
+            <i class="fa-brands fa-telegram"></i> Telegram
+          </a>
+          <a href="https://twitter.com/intent/tweet?text={{ page.title | url_encode }}&url={{ page.url | absolute_url }}" target="_blank" class="button button--secondary" style="font-size: 12px;">
+            <i class="fa-brands fa-x-twitter"></i> X / Twitter
+          </a>
+          <button class="button button--secondary" onclick="navigator.clipboard.writeText(window.location.href); alert('Tautan berhasil disalin!');" style="font-size: 12px;">
+            <i class="fa-solid fa-copy"></i> Salin URL
+          </button>
+        </div>
+      </div>
+
+      <!-- Post Navigation (Previous / Next) -->
+      <div class="post-nav" style="margin-top: 30px; display: flex; gap: 16px; flex-wrap: wrap;">
+        {% if page.previous %}
+        <a href="{{ page.previous.url | relative_url }}" class="post-nav__link" style="flex: 1; min-width: 240px; border: 1px solid var(--color-border); padding: 16px; border-radius: 8px; display: block; text-decoration: none;">
+          <div class="post-nav__box">
+            <span class="post-nav__label" style="font-size: 11px; color: var(--color-accent); text-transform: uppercase;">&larr; Artikel Sebelumnya</span>
+            <h4 class="post-nav__title" style="font-size: 14px; margin-top: 6px; color: var(--color-text);">{{ page.previous.title | truncate: 60 }}</h4>
+          </div>
+        </a>
+        {% endif %}
+
+        {% if page.next %}
+        <a href="{{ page.next.url | relative_url }}" class="post-nav__link" style="flex: 1; min-width: 240px; border: 1px solid var(--color-border); padding: 16px; border-radius: 8px; display: block; text-decoration: none; text-align: right;">
+          <div class="post-nav__box">
+            <span class="post-nav__label" style="font-size: 11px; color: var(--color-accent); text-transform: uppercase;">Artikel Selanjutnya &rarr;</span>
+            <h4 class="post-nav__title" style="font-size: 14px; margin-top: 6px; color: var(--color-text);">{{ page.next.title | truncate: 60 }}</h4>
+          </div>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Sidebar Column -->
+    <aside class="post-page__sidebar col-4 col-d-12">
+      <!-- Portfolio Promo Widget -->
+      <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent); margin-bottom: 28px;">
+        <div class="widget__header" style="margin-bottom: 12px;">
+          <span class="widget__title" style="color: var(--color-accent); font-weight:700;">// PORTOFOLIO RESMI</span>
+        </div>
+        <p style="font-size: 13px; line-height: 1.6; color: var(--color-text-mid); margin-bottom: 14px;">
+          Ingin melihat arsitektur produksi, studi kasus jaringan, atau layanan IT Bang Mansur secara lengkap? Kunjungi website portofolio interaktif.
+        </p>
+        <div style="font-family: var(--font-family-mono); font-size: 11px; color: var(--color-accent-alt); margin-bottom: 14px; background: var(--color-bg-code); padding: 8px 12px; border-radius: 6px;">
+          &gt; target: https://xsur.my.id<br>
+          &gt; embed: /portofolio/
+        </div>
+        <a href="{{ '/portofolio/' | relative_url }}" class="button button--primary" style="display:block; text-align:center; width:100%;">
+          &gt; Buka Portofolio Lengkap ↗
+        </a>
+      </div>
+
+      <!-- Tools Quick Access Widget -->
+      <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent); margin-bottom: 28px;">
+        <div class="widget__header" style="margin-bottom: 12px;">
+          <span class="widget__title" style="color: var(--color-accent); font-weight:700;">// NETOPS TOOLS SUITE</span>
+        </div>
+        <ul style="list-style:none; padding:0; margin:0 0 16px 0; font-size:12px; line-height:1.9;">
+          <li><a href="{{ '/tools/subnet-calculator/' | relative_url }}" style="color:var(--color-text);">&bull; IPv4 Subnetting &amp; CIDR</a></li>
+          <li><a href="{{ '/tools/ping-tester/' | relative_url }}" style="color:var(--color-text);">&bull; Latency &amp; Jitter Tester</a></li>
+          <li><a href="{{ '/tools/bandwidth-calculator/' | relative_url }}" style="color:var(--color-text);">&bull; Bandwidth Speed Calculator</a></li>
+          <li><a href="{{ '/tools/mac-formatter/' | relative_url }}" style="color:var(--color-text);">&bull; MAC Formatter &amp; EUI-64</a></li>
+          <li><a href="{{ '/tools/crypto-hasher/' | relative_url }}" style="color:var(--color-text);">&bull; Crypto Hasher &amp; CSPRNG</a></li>
+        </ul>
+        <a href="{{ '/tools/' | relative_url }}" class="button button--secondary" style="display:block; text-align:center; width:100%;">
+          &gt; Buka Semua Tools (8 Alat) ↗
+        </a>
+      </div>
+
+      <!-- Author Card -->
+      <div class="widget" style="border: 1px solid var(--color-border); border-radius: 12px; padding: 22px; background: color-mix(in srgb, var(--color-bg-panel) 60%, transparent);">
+        <div class="widget__header" style="margin-bottom: 12px;">
+          <span class="widget__title">// AUTHOR</span>
+        </div>
+        <div style="font-family: var(--font-family-mono); font-size: 13px; font-weight: 700; color: var(--color-accent); margin-bottom: 6px;">
+          Bang Mansur
+        </div>
+        <p style="font-size: 12px; line-height: 1.6; color: var(--color-text-mid); margin-bottom: 14px;">
+          Cybersecurity Practitioner, Network Infrastructure Specialist, &amp; CS Master's Researcher.
+        </p>
+        <div style="display:flex; gap:8px;">
+          <a href="https://github.com/xyz-sur" target="_blank" class="button button--secondary" style="flex:1; text-align:center; font-size:11px;">GitHub</a>
+          <a href="https://t.me/premium2inn" target="_blank" class="button button--secondary" style="flex:1; text-align:center; font-size:11px;">Telegram</a>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
