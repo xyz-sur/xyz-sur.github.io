@@ -1,0 +1,42 @@
+# Indonesian localization for Chirpy
+titles:
+  home: "Beranda"
+  categories: "Kategori"
+  tags: "Tag"
+  archives: "Arsip"
+  about: "Tentang"
+
+post:
+  written_by: "Ditulis oleh"
+  posted: "Diterbitkan"
+  updated: "Diperbarui"
+  words: "kata"
+  pageview_measure: "tayangan"
+  read_time:
+    unit: "menit"
+    prompt: "baca"
+  relate_posts: "Tulisan Terkait"
+  button:
+    next: "Selanjutnya"
+    previous: "Sebelumnya"
+    share: "Bagikan"
+
+tabs:
+  search: "Cari"
+  categories: "Kategori"
+  tags: "Tag"
+  archives: "Arsip"
+  about: "Tentang"
+
+search:
+  hint: "Cari artikel, topik, atau kata kunci..."
+  cancel: "Batal"
+  no_results: "Tidak ada hasil yang cocok"
+
+copyright:
+  brief: "Hak Cipta Dilindungi"
+  verbose: "Kecuali dinyatakan lain, tulisan di blog ini dilisensikan di bawah lisensi Creative Commons."
+
+panel:
+  toc: "Daftar Isi"
+  trending_tags: "Tag Populer"
