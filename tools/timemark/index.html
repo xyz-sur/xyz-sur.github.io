@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Timemark Camera - Edisi Profesional</title>
+    <style>
+        :root {
+            --primary: #FFC107;
+            --bg-dark: #000000;
+            --bg-panel: #1c1c1e;
+            --text-light: #ffffff;
+            --text-muted: #8e8e93;
+        }
+
+        * { 
+            box-sizing: border-box; 
+            margin: 0; 
+            padding: 0; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+        }
+        
+        body { 
+            background: #111; 
+            color: var(--text-light); 
+            height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            user-select: none; 
+            overflow: hidden;
+        }
+
+        .app-wrapper {
+            width: 100%;
+            height: 100%;
+            max-width: 420px; 
+            max-height: 850px;
+            background: var(--bg-dark);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 4px solid #222;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+        }
+
+        /* Navigasi Tab */
+        .tab-bar { display: flex; justify-content: center; background: var(--bg-dark); padding: 12px 0; z-index: 20; border-bottom: 1px solid #222; }
+        .tab-btn { background: transparent; border: none; color: var(--text-muted); font-size: 0.95rem; font-weight: 600; padding: 6px 20px; cursor: pointer; transition: 0.2s; }
+        .tab-btn.active { color: var(--text-light); border-bottom: 2px solid var(--primary); }
+
+        /* Kontainer Tampilan */
+        .view-container { flex: 1; display: none; flex-direction: column; position: relative; overflow: hidden; background: #000; }
+        .view-container.active { display: flex; }
+
+        /* Area Kamera */
+        .camera-viewport { width: 100%; flex: 1; position: relative; background: #000; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        video, #preview-canvas { position: absolute; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+        
+        /* Preview Canvas (Berada di atas video, tapi di bawah UI Overlay) */
+        #preview-canvas { z-index: 2; display: none; }
+
+        /* Hamparan UI (Selalu berada di atas untuk menjaga konsistensi) */
+        .overlay { position: absolute; z-index: 3; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.8); pointer-events: none; display: flex; }
+
+        /* Indikator Atas (Kompas & ID) */
+        .top-indicators { top: 15px; left: 15px; right: 15px; justify-content: space-between; align-items: flex-start; }
+        .compass-box { display: flex; flex-direction: column; align-items: center; background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 6px; backdrop-filter: blur(4px); }
+        .compass-dir { font-size: 1.1rem; font-weight: bold; color: #ff3b30; line-height: 1.1;}
+        .compass-deg { font-size: 0.7rem; }
+        .id-badge { background: rgba(0,0,0,0.4); padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-family: monospace; backdrop-filter: blur(4px); }
+
+        /* Hamparan Peta (Kiri Bawah) */
+        .map-overlay {
+            bottom: 20px; left: 15px; width: 95px; height: 95px;
+            border: 2px solid rgba(255, 255, 255, 0.7); border-radius: 8px;
+            background: rgba(34, 34, 34, 0.5); overflow: hidden; position: absolute;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: none; opacity: 0.85; z-index: 3;
+        }
+        #osm-map-img { width: 100%; height: 100%; object-fit: cover; }
+        .map-pin {
+            position: absolute; top: 50%; left: 50%; width: 8px; height: 8px;
+            background-color: #ff3b30; border: 2px solid #ffffff; border-radius: 50%;
+            transform: translate(-50%, -50%); box-shadow: 0 0 5px rgba(0,0,0,0.8);
+        }
+
+        /* Data Tanda Air (Kanan Bawah) */
+        .data-overlay { bottom: 20px; right: 15px; flex-direction: column; align-items: flex-end; max-width: 65%; }
+        .wm-note { font-size: 0.95rem; font-weight: 600; color: #34c759; margin-bottom: 4px; text-align: right; word-wrap: break-word; }
+        .wm-coords { font-size: 0.75rem; font-weight: 600; margin-bottom: 2px; font-family: 'Courier New', monospace; color: #ddd; }
+        .wm-address { font-size: 0.85rem; font-weight: 600; margin-bottom: 3px; text-align: right; line-height: 1.2; word-wrap: break-word; }
+        .wm-date { font-size: 0.95rem; font-weight: bold; }
+        .wm-time { font-size: 2.8rem; font-weight: 700; color: var(--primary); line-height: 1; letter-spacing: -1px; }
+
+        /* Panel Kontrol Bawah */
+        .control-panel { background: var(--bg-panel); padding: 15px; display: flex; flex-direction: column; gap: 15px; z-index: 10; }
+        .note-input { background: rgba(255,255,255,0.08); border: 1px solid #333; color: white; padding: 10px; border-radius: 8px; font-size: 0.9rem; outline: none; width: 100%; }
+        
+        .action-row { display: flex; justify-content: center; align-items: center; height: 65px; gap: 15px; }
+        .btn-shutter-wrap { width: 64px; height: 64px; border-radius: 50%; border: 3px solid #fff; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+        .btn-shutter { width: 52px; height: 52px; border-radius: 50%; background: #fff; cursor: pointer; border: none; pointer-events: none; }
+        .btn-shutter-wrap:active .btn-shutter { transform: scale(0.9); background: #e5e5ea; }
+        
+        .btn-action { display: none; flex: 1; padding: 12px 0; border-radius: 8px; font-size: 0.95rem; font-weight: bold; cursor: pointer; border: none; text-align: center; }
+        .btn-retake { background: #3a3a3c; color: white; }
+        .btn-download { background: var(--primary); color: #000; }
+
+        /* === PANEL VALIDASI === */
+        .validator-panel { padding: 20px; overflow-y: auto; flex: 1; background: var(--bg-dark); }
+        .val-header { font-size: 1.2rem; font-weight: bold; margin-bottom: 5px; }
+        .val-desc { color: var(--text-muted); margin-bottom: 15px; font-size: 0.8rem; line-height: 1.4; text-align: justify; }
+        .upload-area { border: 2px dashed #444; border-radius: 10px; padding: 25px 15px; text-align: center; background: #111; cursor: pointer; display: block; margin-bottom: 15px; transition: 0.2s; }
+        .upload-area:hover { border-color: var(--primary); background: rgba(255, 193, 7, 0.05); }
+        .result-box { background: #1c1c1e; border-radius: 10px; padding: 15px; display: none; font-size: 0.8rem; }
+        .result-title { font-weight: bold; font-size: 0.95rem; margin-bottom: 12px; }
+        .result-item { margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; }
+        .result-label { color: var(--text-muted); font-size: 0.7rem; margin-bottom: 2px; }
+        .result-val { font-weight: 500; word-wrap: break-word; }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+        .status-valid { background: rgba(52,199,89,0.15); color: #34c759; border: 1px solid #34c759; }
+        .status-invalid { background: rgba(255,59,48,0.15); color: #ff3b30; border: 1px solid #ff3b30; }
+
+        #render-canvas { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="app-wrapper">
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('camera')" id="tab-camera">Kamera</button>
+        <button class="tab-btn" onclick="switchTab('validator')" id="tab-validator">Validasi</button>
+    </div>
+
+    <div class="view-container active" id="view-camera">
+        <div class="camera-viewport">
+            <video id="video-stream" autoplay playsinline muted></video>
+            
+            <canvas id="preview-canvas"></canvas>
+
+            <div class="overlay top-indicators">
+                <div class="compass-box">
+                    <div class="compass-dir" id="c-dir">U</div>
+                    <div class="compass-deg" id="c-deg">0°</div>
+                </div>
+                <div class="id-badge">ID: <span id="ui-id">Memuat...</span></div>
+            </div>
+
+            <div class="overlay map-overlay" id="map-container">
+                <img id="osm-map-img" src="" alt="Peta Lokasi" crossorigin="anonymous">
+                <div class="map-pin"></div>
+            </div>
+
+            <div class="overlay data-overlay">
+                <div class="wm-note" id="ui-note"></div>
+                <div class="wm-coords" id="ui-coords">Mendapatkan koordinat...</div>
+                <div class="wm-address" id="ui-address">📍 <span id="ui-addr-text">Menunggu data lokasi...</span></div>
+                <div class="wm-date" id="ui-date">Tanggal</div>
+                <div class="wm-time" id="ui-time">--:--</div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <input type="text" class="note-input" id="note-input" placeholder="Tambahkan catatan (Opsional)" oninput="updateNote()" autocomplete="off">
+            <div class="action-row">
+                <button class="btn-action btn-retake" id="btn-retake" onclick="resetCamera()">Batal</button>
+                <div class="btn-shutter-wrap" id="btn-shutter-wrap" onclick="capturePreview()">
+                    <div class="btn-shutter"></div>
+                </div>
+                <button class="btn-action btn-download" id="btn-download" onclick="signAndDownload()">Simpan Foto</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="view-container" id="view-validator">
+        <div class="validator-panel">
+            <div class="val-header">Validator Integritas Foto</div>
+            <div class="val-desc">
+                Unggah foto format JPG hasil jepretan aplikasi ini untuk memverifikasi keaslian struktural piksel dan tanda tangan biner.
+            </div>
+            
+            <label class="upload-area">
+                <div style="font-size:1.8rem; margin-bottom:5px;">📁</div>
+                <div style="font-weight: 600;">Pilih Foto Timemark</div>
+                <input type="file" id="file-upload" accept="image/jpeg, image/jpg" style="display:none;" onchange="validateImage(event)">
+            </label>
+
+            <div class="result-box" id="result-box">
+                <div class="result-title" id="val-status"></div>
+                <div class="result-item"><div class="result-label">ID Transaksi</div><div class="result-val" id="val-id">-</div></div>
+                <div class="result-item"><div class="result-label">Waktu Pengambilan</div><div class="result-val" id="val-time">-</div></div>
+                <div class="result-item"><div class="result-label">Koordinat Lokasi</div><div class="result-val" id="val-coords">-</div></div>
+                <div class="result-item" style="border:none;"><div class="result-label">Hash Biner (SHA-256)</div><div class="result-val" style="font-size:0.65rem; font-family:monospace; color:var(--text-muted);" id="val-hash">-</div></div>
+            </div>
+        </div>
+    </div>
+
+    <canvas id="render-canvas"></canvas>
+</div>
+
+<script>
+    // Konfigurasi Ukuran Asli Foto yang Disimpan
+    const canvasWidth = 720;
+    const canvasHeight = 1280;
+    
+    // Variabel Status
+    let isPreviewMode = false;
+    let currentLat = 0, currentLng = 0, currentAddress = "Lokasi tidak diketahui";
+    let compassDeg = 0, photoId = "";
+
+    const video = document.getElementById('video-stream');
+    const previewCanvas = document.getElementById('preview-canvas');
+    const mapImg = document.getElementById('osm-map-img');
+    const mapContainer = document.getElementById('map-container');
+
+    function switchTab(tab) {
+        document.querySelectorAll('.view-container').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        document.getElementById('view-' + tab).classList.add('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    navigator.mediaDevices.getUserMedia({ 
+        video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 1920 } } 
+    })
+    .then(stream => { 
+        video.srcObject = stream; 
+        video.play(); 
+    })
+    .catch(() => alert("Akses kamera ditolak oleh peramban."));
+
+    function getOsmTileUrl(lat, lon, zoom) {
+        const x = Math.floor((lon + 180) / 360 * Math.pow(2, zoom));
+        const y = Math.floor((1 - Math.log(Math.tan(lat * Math.PI / 180) + 1 / Math.cos(lat * Math.PI / 180)) / Math.PI) / 2 * Math.pow(2, zoom));
+        return `https://tile.openstreetmap.org/${zoom}/${x}/${y}.png`;
+    }
+
+    if ("geolocation" in navigator) {
+        navigator.geolocation.watchPosition(async (pos) => {
+            if (isPreviewMode) return; // Kunci GPS saat preview
+            currentLat = pos.coords.latitude.toFixed(5);
+            currentLng = pos.coords.longitude.toFixed(5);
+            document.getElementById('ui-coords').innerText = `Lat: ${currentLat} | Lon: ${currentLng}`;
+            
+            mapImg.src = getOsmTileUrl(pos.coords.latitude, pos.coords.longitude, 15);
+            mapContainer.style.display = 'block';
+
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLat}&lon=${currentLng}`);
+                const data = await res.json();
+                if(data && data.display_name) {
+                    currentAddress = data.display_name.split(", ").slice(0, 3).join(", ");
+                    document.getElementById('ui-addr-text').innerText = currentAddress;
+                }
+            } catch(e) {}
+        }, null, { enableHighAccuracy: true });
+    }
+
+    window.addEventListener("deviceorientationabsolute", (e) => { handleCompass(e.alpha); }, true);
+    window.addEventListener("deviceorientation", (e) => {
+        if (e.webkitCompassHeading) { handleCompass(e.webkitCompassHeading); } 
+        else if (e.alpha) { handleCompass(360 - e.alpha); }
+    }, true);
+
+    function handleCompass(heading) {
+        if (heading === null || isPreviewMode) return; // Kunci kompas saat preview
+        compassDeg = Math.round(heading);
+        const dirs = ["U", "TL", "T", "TG", "S", "BD", "B", "BL", "U"];
+        document.getElementById('c-dir').innerText = dirs[Math.round((heading % 360) / 45)];
+        document.getElementById('c-deg').innerText = compassDeg + "°";
+    }
+
+    setInterval(() => {
+        if (isPreviewMode) return; // Kunci waktu saat preview
+        const now = new Date();
+        document.getElementById('ui-time').innerText = String(now.getHours()).padStart(2, '0') + ':' + String(now.getMinutes()).padStart(2, '0') + ':' + String(now.getSeconds()).padStart(2, '0');
+        document.getElementById('ui-date').innerText = now.toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' });
+
+        photoId = Date.now().toString(36).toUpperCase() + '-' + Math.floor(Math.random()*10000).toString(16).toUpperCase();
+        document.getElementById('ui-id').innerText = photoId;
+    }, 1000);
+
+    function updateNote() {
+        document.getElementById('ui-note').innerText = document.getElementById('note-input').value;
+    }
+
+    /* =========================================================
+       LOGIKA TANGKAPAN GAMBAR (SEAMLESS PREVIEW)
+       ========================================================= */
+    function capturePreview() {
+        if (video.videoWidth === 0) return;
+        
+        isPreviewMode = true; // Membekukan jam, kompas, dan GPS
+
+        // Menyalin frame video ke preview-canvas untuk visual yang identik
+        previewCanvas.width = video.videoWidth;
+        previewCanvas.height = video.videoHeight;
+        previewCanvas.getContext('2d').drawImage(video, 0, 0);
+        previewCanvas.style.display = 'block';
+
+        // Antarmuka (UI Overlay) TIDAK DIHILANGKAN, dibiarkan diam di tempat
+        document.getElementById('btn-shutter-wrap').style.display = 'none';
+        document.getElementById('btn-retake').style.display = 'block';
+        document.getElementById('btn-download').style.display = 'block';
+        document.getElementById('note-input').disabled = true;
+    }
+
+    function resetCamera() {
+        isPreviewMode = false; // Menghidupkan kembali jam, kompas, dan GPS
+        previewCanvas.style.display = 'none';
+        
+        document.getElementById('btn-shutter-wrap').style.display = 'flex';
+        document.getElementById('btn-retake').style.display = 'none';
+        document.getElementById('btn-download').style.display = 'none';
+        document.getElementById('note-input').disabled = false;
+    }
+
+    // Fungsi Render Resolusi Tinggi (Hanya dijalankan saat tombol "Simpan" ditekan)
+    function drawHighResImage(canvas, ctx) {
+        let srcX = 0, srcY = 0, srcWidth = previewCanvas.width, srcHeight = previewCanvas.height;
+        const expectedRatio = canvasWidth / canvasHeight; 
+        const currentRatio = previewCanvas.width / previewCanvas.height;
+
+        if (currentRatio > expectedRatio) {
+            srcWidth = previewCanvas.height * expectedRatio;
+            srcX = (previewCanvas.width - srcWidth) / 2;
+        } else {
+            srcHeight = previewCanvas.width / expectedRatio;
+            srcY = (previewCanvas.height - srcHeight) / 2;
+        }
+
+        // Gambar foto asli
+        ctx.drawImage(previewCanvas, srcX, srcY, srcWidth, srcHeight, 0, 0, canvasWidth, canvasHeight);
+
+        // Gambar UI Resolusi Tinggi secara Proporsional
+        const padX = canvas.width - 25;
+        let padY = canvas.height - 25;
+
+        // Teks Kanan Bawah
+        ctx.shadowColor = "rgba(0, 0, 0, 0.85)";
+        ctx.shadowBlur = 5; ctx.shadowOffsetX = 2; ctx.shadowOffsetY = 2;
+        ctx.textAlign = "right";
+        
+        ctx.fillStyle = "#FFC107";
+        ctx.font = "bold 80px Arial";
+        ctx.fillText(document.getElementById('ui-time').innerText, padX, padY);
+        padY -= 70;
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 26px Arial";
+        ctx.fillText(document.getElementById('ui-date').innerText, padX, padY);
+        padY -= 35;
+
+        const maxTextWidth = canvas.width * 0.6;
+        ctx.font = "bold 22px Arial";
+        ctx.fillText("📍 " + currentAddress, padX, padY, maxTextWidth);
+        padY -= 30;
+
+        ctx.fillStyle = "#eeeeee";
+        ctx.font = "bold 18px 'Courier New', monospace";
+        ctx.fillText(`Lat: ${currentLat} | Lon: ${currentLng}`, padX, padY, maxTextWidth);
+        padY -= 30;
+
+        const note = document.getElementById('note-input').value;
+        if(note) {
+            ctx.fillStyle = "#34c759";
+            ctx.font = "bold 24px Arial";
+            ctx.fillText(note, padX, padY, maxTextWidth);
+        }
+
+        // Peta Kiri Bawah
+        if (mapContainer.style.display === 'block') {
+            try {
+                const mapSize = 150;
+                const mapX = 25;
+                const mapY = canvas.height - mapSize - 25;
+                
+                ctx.save();
+                ctx.globalAlpha = 0.85; 
+                ctx.lineWidth = 3;
+                ctx.strokeStyle = "rgba(255, 255, 255, 0.7)";
+                ctx.strokeRect(mapX, mapY, mapSize, mapSize);
+                
+                ctx.shadowColor = "transparent";
+                ctx.drawImage(mapImg, mapX, mapY, mapSize, mapSize);
+                
+                ctx.globalAlpha = 1.0; 
+                ctx.fillStyle = "#ff3b30";
+                ctx.beginPath();
+                ctx.arc(mapX + (mapSize/2), mapY + (mapSize/2), 6, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 2;
+                ctx.stroke();
+                ctx.restore();
+            } catch (e) {}
+        }
+
+        // Kiri Atas (Kompas & ID)
+        ctx.shadowColor = "transparent";
+        ctx.fillStyle = "rgba(0,0,0,0.4)";
+        ctx.fillRect(25, 25, 95, 85); 
+        ctx.fillRect(canvas.width - 245, 25, 220, 35);
+
+        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.fillStyle = "#ff3b30";
+        ctx.textAlign = "center";
+        ctx.font = "bold 34px Arial";
+        ctx.fillText(document.getElementById('c-dir').innerText, 72, 65);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 16px Arial";
+        ctx.fillText(`${compassDeg}°`, 72, 95);
+
+        ctx.textAlign = "right";
+        ctx.font = "16px monospace";
+        ctx.fillText(`ID: ${photoId}`, canvas.width - 35, 48);
+    }
+
+    /* =========================================================
+       KRIPTOGRAFI & PENYIMPANAN
+       ========================================================= */
+    async function signAndDownload() {
+        if (!window.crypto || !window.crypto.subtle) {
+            alert("Kriptografi ditolak. Pastikan menggunakan HTTPS.");
+            return;
+        }
+
+        const canvas = document.getElementById('render-canvas');
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+        const ctx = canvas.getContext('2d');
+        
+        drawHighResImage(canvas, ctx);
+
+        canvas.toBlob(async (blob) => {
+            const arrayBuffer = await blob.arrayBuffer();
+            const imageBytes = new Uint8Array(arrayBuffer);
+
+            const hashBuffer = await crypto.subtle.digest('SHA-256', imageBytes);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            const metaData = {
+                authority: "Timemark Validated",
+                id: photoId,
+                time: document.getElementById('ui-date').innerText + " " + document.getElementById('ui-time').innerText,
+                coords: `${currentLat}, ${currentLng}`,
+                hash: hashHex
+            };
+
+            const jsonStr = JSON.stringify(metaData);
+            const base64Data = btoa(unescape(encodeURIComponent(jsonStr)));
+            const sigString = "|||TM_START|||" + base64Data + "|||TM_END|||";
+            const sigBytes = new TextEncoder().encode(sigString);
+
+            const finalBytes = new Uint8Array(imageBytes.length + sigBytes.length);
+            finalBytes.set(imageBytes);
+            finalBytes.set(sigBytes, imageBytes.length);
+
+            const finalBlob = new Blob([finalBytes], { type: 'image/jpeg' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(finalBlob);
+            a.download = `Timemark_${photoId}.jpg`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            resetCamera();
+        }, 'image/jpeg', 0.95);
+    }
+
+    /* =========================================================
+       VALIDATOR BINER STABIL
+       ========================================================= */
+    function findMarker(bytes, markerStr) {
+        const marker = new TextEncoder().encode(markerStr);
+        for (let i = bytes.length - marker.length; i >= 0; i--) {
+            let match = true;
+            for (let j = 0; j < marker.length; j++) {
+                if (bytes[i + j] !== marker[j]) { match = false; break; }
+            }
+            if (match) return i;
+        }
+        return -1;
+    }
+
+    async function validateImage(event) {
+        const file = event.target.files[0];
+        if(!file) return;
+
+        const resBox = document.getElementById('result-box');
+        const valStatus = document.getElementById('val-status');
+        resBox.style.display = 'block';
+        valStatus.innerHTML = `Menganalisis struktur biner...`;
+
+        const arrayBuffer = await file.arrayBuffer();
+        const bytes = new Uint8Array(arrayBuffer);
+        
+        const splitIndex = findMarker(bytes, "|||TM_START|||");
+        const endIndex = findMarker(bytes, "|||TM_END|||");
+
+        if (splitIndex === -1 || endIndex === -1) {
+            valStatus.innerHTML = `<span class="status-badge status-invalid">⚠ Foto Hasil Suntingan / Tidak Valid</span>`;
+            document.getElementById('val-id').innerText = "-";
+            document.getElementById('val-time').innerText = "-";
+            document.getElementById('val-coords').innerText = "-";
+            document.getElementById('val-hash').innerText = "Data kriptografi biner hilang.";
+            return;
+        }
+
+        try {
+            // Ekstrak Base64 aman
+            const b64Bytes = bytes.slice(splitIndex + 14, endIndex);
+            let base64String = "";
+            for(let i=0; i<b64Bytes.length; i++) base64String += String.fromCharCode(b64Bytes[i]);
+            
+            const jsonString = decodeURIComponent(escape(atob(base64String)));
+            const meta = JSON.parse(jsonString);
+
+            document.getElementById('val-id').innerText = meta.id;
+            document.getElementById('val-time').innerText = meta.time;
+            document.getElementById('val-coords').innerText = meta.coords;
+            document.getElementById('val-hash').innerText = meta.hash;
+
+            const trueImageBytes = bytes.slice(0, splitIndex);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', trueImageBytes);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const calculatedHash = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            if (calculatedHash === meta.hash) {
+                valStatus.innerHTML = `<span class="status-badge status-valid">✓ Disahkan Asli 100%</span>`;
+            } else {
+                valStatus.innerHTML = `<span class="status-badge status-invalid">⚠ Piksel Telah Dimanipulasi</span>`;
+            }
+        } catch (e) {
+            valStatus.innerHTML = `<span class="status-badge status-invalid">Gagal mengurai blok metadata.</span>`;
+            console.error(e);
+        }
+    }
+</script>
+</body>
+</html>

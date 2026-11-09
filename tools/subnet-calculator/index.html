@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPv4 Subnet & CIDR Calculator | Bang Mansur Tools</title>
+  <meta name="description" content="Kalkulator subnetting IP, CIDR mask, usable IP range, network & broadcast address instan untuk Network Engineer dan SysAdmin.">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      background-color: #0f1218;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-tool {
+      background-color: #171b24;
+      border: 1px solid #2d3342;
+      border-radius: 1rem;
+    }
+    .form-control, .form-select {
+      background-color: #0d1117;
+      border: 1px solid #30363d;
+      color: #58a6ff;
+      font-family: monospace;
+    }
+    .form-control:focus, .form-select:focus {
+      background-color: #0d1117;
+      border-color: #58a6ff;
+      color: #58a6ff;
+      box-shadow: 0 0 0 0.25rem rgba(88, 166, 255, 0.25);
+    }
+    .table-dark {
+      --bs-table-bg: transparent;
+      border-color: #2d3342;
+    }
+    .badge-cidr {
+      background: rgba(88, 166, 255, 0.15);
+      color: #58a6ff;
+      border: 1px solid rgba(88, 166, 255, 0.3);
+    }
+  </style>
+</head>
+<body class="py-4">
+  <div class="container" style="max-width: 800px;">
+    <!-- Navigation Back -->
+    <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom border-secondary border-opacity-25">
+      <a href="/" class="btn btn-outline-secondary btn-sm rounded-pill text-light">
+        <i class="fas fa-arrow-left me-1"></i> Kembali ke Blog
+      </a>
+      <span class="badge badge-cidr px-3 py-2 rounded-pill font-monospace">
+        <i class="fas fa-network-wired me-1"></i> SRE & NetOps Toolkit
+      </span>
+    </div>
+
+    <!-- Main Card -->
+    <div class="card card-tool p-4 shadow-lg mb-4">
+      <div class="d-flex align-items-center gap-3 mb-3">
+        <div class="p-3 bg-primary bg-opacity-10 text-primary rounded-3 border border-primary border-opacity-25">
+          <i class="fas fa-calculator fa-2x"></i>
+        </div>
+        <div>
+          <h4 class="fw-bold mb-1 text-light">IPv4 Subnet & CIDR Calculator</h4>
+          <p class="text-muted small mb-0">Hitung otomatis network IP, broadcast, jumlah host, dan rentang alokasi subnetting.</p>
+        </div>
+      </div>
+
+      <div class="row g-3 mb-4">
+        <div class="col-md-8">
+          <label class="form-label text-muted small fw-bold">IP Address</label>
+          <input type="text" id="ipInput" class="form-control form-control-lg" value="192.168.10.125" placeholder="e.g. 192.168.1.1">
+        </div>
+        <div class="col-md-4">
+          <label class="form-label text-muted small fw-bold">Prefix (CIDR)</label>
+          <select id="cidrSelect" class="form-select form-select-lg"></select>
+        </div>
+      </div>
+
+      <!-- Results Table -->
+      <div class="table-responsive">
+        <table class="table table-dark table-hover mb-0">
+          <tbody>
+            <tr>
+              <th class="text-muted w-40">Network IP (CIDR)</th>
+              <td id="resNetwork" class="font-monospace text-primary fw-bold">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Subnet Mask</th>
+              <td id="resMask" class="font-monospace text-light">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Broadcast IP</th>
+              <td id="resBroadcast" class="font-monospace text-warning">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Usable Host Range</th>
+              <td id="resRange" class="font-monospace text-success fw-bold">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Total Usable Hosts</th>
+              <td id="resHosts" class="font-monospace text-info fw-bold">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Wildcard Mask</th>
+              <td id="resWildcard" class="font-monospace text-secondary">-</td>
+            </tr>
+            <tr>
+              <th class="text-muted">Binary Netmask</th>
+              <td id="resBinary" class="font-monospace text-secondary small">-</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const cidrSelect = document.getElementById('cidrSelect');
+    for (let i = 1; i <= 32; i++) {
+      const opt = document.createElement('option');
+      opt.value = i;
+      opt.text = '/' + i;
+      if (i === 24) opt.selected = true;
+      cidrSelect.appendChild(opt);
+    }
+
+    function ip2int(ip) {
+      return ip.split('.').reduce((acc, octet) => (acc << 8) + parseInt(octet, 10), 0) >>> 0;
+    }
+
+    function int2ip(int) {
+      return [(int >>> 24) & 255, (int >>> 16) & 255, (int >>> 8) & 255, int & 255].join('.');
+    }
+
+    function calculate() {
+      const ipStr = document.getElementById('ipInput').value.trim();
+      const cidr = parseInt(cidrSelect.value, 10);
+      
+      const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+      if (!ipRegex.test(ipStr)) return;
+
+      const ipInt = ip2int(ipStr);
+      const maskInt = cidr === 0 ? 0 : (~0 << (32 - cidr)) >>> 0;
+      const netInt = (ipInt & maskInt) >>> 0;
+      const bcastInt = (netInt | ~maskInt) >>> 0;
+      const wildcardInt = (~maskInt) >>> 0;
+
+      const hosts = cidr >= 31 ? (cidr === 32 ? 1 : 2) : (bcastInt - netInt - 1);
+      const firstHost = cidr >= 31 ? netInt : netInt + 1;
+      const lastHost = cidr >= 31 ? bcastInt : bcastInt - 1;
+
+      document.getElementById('resNetwork').innerText = `${int2ip(netInt)} /${cidr}`;
+      document.getElementById('resMask').innerText = int2ip(maskInt);
+      document.getElementById('resBroadcast').innerText = int2ip(bcastInt);
+      document.getElementById('resRange').innerText = `${int2ip(firstHost)} - ${int2ip(lastHost)}`;
+      document.getElementById('resHosts').innerText = `${hosts.toLocaleString()} alamat host`;
+      document.getElementById('resWildcard').innerText = int2ip(wildcardInt);
+      
+      const binaryMask = (maskInt >>> 0).toString(2).padStart(32, '0').match(/.{8}/g).join('.');
+      document.getElementById('resBinary').innerText = binaryMask;
+    }
+
+    document.getElementById('ipInput').addEventListener('input', calculate);
+    cidrSelect.addEventListener('change', calculate);
+    calculate();
+  </script>
+</body>
+</html>

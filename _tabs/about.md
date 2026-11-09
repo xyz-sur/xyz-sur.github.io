@@ -1,7 +1,7 @@
 ---
 title: Tentang
 icon: fas fa-user-secret
-order: 4
+order: 6
 ---
 
 # 🛡️ Profil Profesional
