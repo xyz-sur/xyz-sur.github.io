@@ -1,0 +1,164 @@
+/* ── Cyber Hacker / Matrix Theme Extension for Bang Mansur Portal ── */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+:root {
+  --cyber-green: #00ff66;
+  --cyber-green-glow: rgba(0, 255, 102, 0.25);
+  --cyber-cyan: #00f0ff;
+  --cyber-cyan-glow: rgba(0, 240, 255, 0.25);
+  --cyber-amber: #ffb700;
+  --cyber-red: #ff0055;
+  --cyber-dark-bg: #090c12;
+  --cyber-card-bg: rgba(15, 20, 30, 0.85);
+  --cyber-border: rgba(0, 255, 102, 0.2);
+}
+
+[data-bs-theme="dark"] body {
+  background-color: var(--cyber-dark-bg) !important;
+  background-image: 
+    linear-gradient(rgba(0, 255, 102, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 102, 0.03) 1px, transparent 1px) !important;
+  background-size: 32px 32px !important;
+}
+
+/* Terminal & Code Fonts */
+.font-mono, pre, code, .badge-cyber, .terminal-prompt {
+  font-family: 'Fira Code', 'Share Tech Mono', Consolas, monospace !important;
+}
+
+/* Cyber Card Styling */
+.cyber-card {
+  background: var(--cyber-card-bg) !important;
+  border: 1px solid var(--cyber-border) !important;
+  border-radius: 14px !important;
+  transition: all 0.25s ease-in-out !important;
+  backdrop-filter: blur(8px);
+  position: relative;
+  overflow: hidden;
+}
+
+.cyber-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--cyber-green), transparent);
+  opacity: 0.4;
+  transition: opacity 0.3s ease;
+}
+
+.cyber-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--cyber-green) !important;
+  box-shadow: 0 8px 24px var(--cyber-green-glow) !important;
+}
+
+.cyber-card:hover::before {
+  opacity: 1;
+}
+
+/* Cyan variation */
+.cyber-card.cyan-accent:hover {
+  border-color: var(--cyber-cyan) !important;
+  box-shadow: 0 8px 24px var(--cyber-cyan-glow) !important;
+}
+
+.cyber-card.cyan-accent::before {
+  background: linear-gradient(90deg, transparent, var(--cyber-cyan), transparent);
+}
+
+/* Badges */
+.badge-cyber {
+  background: rgba(0, 255, 102, 0.1) !important;
+  color: var(--cyber-green) !important;
+  border: 1px solid rgba(0, 255, 102, 0.35) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-cyber-cyan {
+  background: rgba(0, 240, 255, 0.1) !important;
+  color: var(--cyber-cyan) !important;
+  border: 1px solid rgba(0, 240, 255, 0.35) !important;
+}
+
+.badge-cyber-amber {
+  background: rgba(255, 183, 0, 0.1) !important;
+  color: var(--cyber-amber) !important;
+  border: 1px solid rgba(255, 183, 0, 0.35) !important;
+}
+
+/* Pulsing Status Dot */
+.status-pulse {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyber-green);
+  box-shadow: 0 0 10px var(--cyber-green);
+  animation: pulse-green 1.8s infinite;
+}
+
+@keyframes pulse-green {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 102, 0.7); }
+  70% { transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 255, 102, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 255, 102, 0); }
+}
+
+/* Terminal CLI Prompt Simulation */
+.terminal-bar {
+  background: #0d1117;
+  border: 1px solid #30363d;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-family: 'Fira Code', monospace;
+  font-size: 0.85rem;
+  color: #58a6ff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.terminal-dots {
+  display: flex;
+  gap: 5px;
+}
+
+.terminal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+.dot-red { background: #ff5f56; }
+.dot-yellow { background: #ffbd2e; }
+.dot-green { background: #27c93f; }
+
+/* Neon Glow Buttons */
+.btn-cyber {
+  background: transparent !important;
+  color: var(--cyber-green) !important;
+  border: 1px solid var(--cyber-green) !important;
+  font-family: 'Fira Code', monospace !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease !important;
+}
+
+.btn-cyber:hover {
+  background: var(--cyber-green) !important;
+  color: #000 !important;
+  box-shadow: 0 0 16px var(--cyber-green-glow) !important;
+}
+
+/* Sidebar Customization */
+#sidebar {
+  border-right: 1px solid rgba(0, 255, 102, 0.15) !important;
+}
+
+#avatar {
+  border: 2px solid var(--cyber-green) !important;
+  box-shadow: 0 0 16px var(--cyber-green-glow) !important;
+}
