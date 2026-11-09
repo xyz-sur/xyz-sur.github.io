@@ -128,6 +128,16 @@
 <body>
 
 <div class="app-wrapper">
+    <!-- Interconnected Header Bar -->
+    <div style="display:flex; justify-content:space-between; align-items:center; background:#0d1117; padding:8px 14px; border-bottom:1px solid #222; font-size:12px; z-index:30;">
+        <div style="display:flex; gap:12px; align-items:center;">
+            <a href="/" style="color:#cbd5e1; text-decoration:none; font-weight:600;" title="Kembali ke Beranda Blog">🏠 Home</a>
+            <a href="/portofolio/" style="color:#38bdf8; text-decoration:none; font-weight:600;" title="Buka Portofolio">💼 Porto</a>
+            <a href="/tools/" style="color:#FFC107; text-decoration:none; font-weight:600;" title="Katalog Rakko Tools">🧰 Tools</a>
+        </div>
+        <span style="color:#64748b; font-family:monospace; font-size:11px;">Timemark GPS</span>
+    </div>
+
     <div class="tab-bar">
         <button class="tab-btn active" onclick="switchTab('camera')" id="tab-camera">Kamera</button>
         <button class="tab-btn" onclick="switchTab('validator')" id="tab-validator">Validasi</button>
