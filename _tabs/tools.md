@@ -12,8 +12,8 @@ order: 2
 </script>
 
 <div class="alert alert-info border border-info border-opacity-25 rounded-3 p-3 mb-4 font-mono small d-flex justify-content-between align-items-center">
-  <span><i class="fas fa-toolbox me-2"></i> Kunjungi portal utilitas interaktif bergaya <strong>Rakko Tools</strong>:</span>
-  <a href="/tools/" class="btn btn-sm btn-info rounded-pill px-3 fw-bold text-dark text-nowrap">Buka Rakko-Style Tools &rarr;</a>
+  <span><i class="fas fa-toolbox me-2"></i> Kunjungi portal utilitas interaktif mandiri <strong>Mansur IT Tools</strong>:</span>
+  <a href="/tools/" class="btn btn-sm btn-info rounded-pill px-3 fw-bold text-dark text-nowrap">Buka Mansur IT Tools &rarr;</a>
 </div>
 
 # 🧰 Web Developer, Networking & SecOps Tools
